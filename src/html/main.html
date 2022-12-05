@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1 id='t'>这有张图</h1>
+    <!-- <img src="../../res/ln.BMP" alt=""></img> -->
+    <canvas id="tut" width="256" height="256"></canvas>
+    <button onclick="drawrgb()">RGB绘图</button>
+    <button onclick="drawgray()">灰度绘图</button>
+    <a href ='./imagekonva.html'>knova 绘图</a>
+    <a href="./mousewheel.html">鼠标滚动事件</a>
+</body>
+
+
+<script>
+    const fs = require('fs');
+    // console.log('aaa');
+    const Konva = require('konva');
+    const { resolve } = require('path')
+    try {
+        //读取文件"binaryfile"
+        var rbuf = fs.readFileSync("F:/_todo/dip_expe/dipelectron/app/res/ln.BMP");
+
+        console.log(rbuf);
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+    let colorStream = rbuf.slice(54, 256 * 4 + 54)
+
+    let biClrUsedSize = colorStream.length / 4
+
+    // console.log(colorStream.length)
+
+    let colorMap = []
+
+    for (let i = 0; i < biClrUsedSize; ++i) {
+        let tmpColor = colorStream.slice(4 * i, 4 * i + 4)
+
+        colorMap[i] = { 'B': tmpColor[0], 'G': tmpColor[1], 'R': tmpColor[2], 'A': tmpColor[3] }
+    }
+
+    console.log(colorMap)
+    let dataStream = rbuf.slice(256 * 4 + 54, 256 * 256 + 256 * 4 + 54)
+
+    console.log(dataStream)
+
+    function drawrgb() {
+        var canvas = document.getElementById('tut');
+        if (!canvas.getContext) return;
+        var ctx = canvas.getContext("2d");
+
+        for (let i = 0; i < 256 * 256; ++i) {
+            grayindex = dataStream[i]
+            rgbindex = colorMap[grayindex]
+            // console.log(`rgb('${rgbindex.R}','${rgbindex.G}','${rgbindex.B}')`)
+
+            ctx.fillStyle= `rgb(${rgbindex.R},${rgbindex.G},${rgbindex.B})`;
+            let w = 255 - parseInt(i / 256)
+            let h =  i % 256
+            ctx.fillRect(h, w, 1, 1);
+            // console.log('#',h,w)
+        }
+    }
+    function drawgray()
+    {
+        var canvas = document.getElementById('tut');
+        if (!canvas.getContext) return;
+        var ctx = canvas.getContext("2d");
+
+        for (let i = 0; i < 256 * 256; ++i) {
+            grayindex = dataStream[i]
+            rgbindex = colorMap[grayindex]
+            // console.log(`rgb('${rgbindex.R}','${rgbindex.G}','${rgbindex.B}')`
+            gray = parseInt((rgbindex.R+rgbindex.G+rgbindex.B)/3)
+            // console.log(`rgb(${gray})`)
+
+            ctx.fillStyle= `rgb(${gray},${gray},${gray})`;
+            let w = 255 - parseInt(i / 256)
+            let h =  i % 256
+            ctx.fillRect(h, w, 1, 1);
+            // console.log('#',h,w)
+        }
+    }
+    
+
+</script>
+
+</html>

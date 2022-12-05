@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>palette</title>
+    <style>
+        .box {
+            margin: auto;
+            background-color: #ccc;
+            width: 1200px;
+            height: 800px;
+
+        }
+
+        button.active {
+            color: #f00;
+        }
+
+        #btnList {
+            display: inline;
+        }
+
+        #container {
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='box'>
+        <div class="tools">
+            <div id='btnList'>
+                <button onclick="drawfImage()">导入文件</button>
+                <button onclick="flagFn(this,'pencil')">铅笔</button>
+                <button onclick="flagFn(this, 'rectH');">矩形框</button>
+                <button onclick="flagFn(this, 'ellipse');">椭圆-空心</button>
+                <button onclick="export2json()">导出画布</button>
+            </div>
+
+            <select id="selectColor" onchange="selectColorFn(this);">
+                <option value="red">红色</option>
+                <option value="blue">蓝色</option>
+                <option value="green">绿色</option>
+            </select>
+            <button onclick="removeFn();">清空画板</button>
+
+        </div>
+        <div id="container"></div>
+    </div>
+    <script src="../js/konva.js"></script>
+    <script src="../js/store.js"></script>
+    <script>
+        let draw = [], // 绘制的图形数组
+            graphNow = null, // 当前图形
+            flag = null, // 激活绘制-铅笔 pencil:铅笔 ellipse:椭圆 rect:矩形 rectH:矩形-空心
+            drawing = false, // 绘制中
+            graphColor = 'red',
+            pointStart = []; // 初始坐标
+
+        function drawfImage() {
+
+            var imageObj = new Image();
+            imageObj.onload = function () {
+                drawImage(this)
+            }
+            imageObj.src = "../../res/ln.BMP"
+
+        }
+
+        // 点击绘图
+        function flagFn(t, v) {
+            flag = v;
+
+            let tools = document.getElementById('btnList')
+                , aBtn = tools.getElementsByTagName('button');
+
+            // 重复点击取消选中
+            if (t.className === 'active') {
+                for (let i = 0; i < aBtn.length; i++) {
+                    aBtn[i].className = '';
+                }
+                graphNow = null
+                flag = null
+            }
+            else {
+
+                // 将所有按钮的 class 改为 空 修改颜色
+                for (let i = 0; i < aBtn.length; i++) {
+                    aBtn[i].className = '';
+                }
+                t.classList.add('active');
+            }
+
+
+        }
+
+        // 选择颜色
+        function selectColorFn(t) {
+            graphColor = t.value;
+        }
+
+        // 移除图形,清空画布
+        function removeFn() {
+            // 清除 Transformer
+            let trans = stage.find('Transformer')
+
+            for (let i = 0; i < trans.length; ++i) {
+                trans[i].destroy()
+            }
+
+            // 清除图形
+
+            aShape = stage.children[0].children
+            // console.log('========================')
+            console.log(aShape.length, '   ', aShape)
+
+            // destroy 后 aShape的长度会改变，
+            let alength = aShape.length
+
+            for (let i = 0; i < alength; ++i) {
+                aShape[0].destroy()
+            }
+            aShape = stage.children[0].children
+            // console.log(aShape)
+            // console.log('========================')
+
+        }
+
+        // 1 create stage
+        const stage = new Konva.Stage({
+            container: 'container',
+            width: 1200,
+            height: 800
+        });
+
+        // 2 create layer
+        const layer = new Konva.Layer();
+        stage.add(layer);
+
+        // 3 create our shape
+        // 画椭圆
+        // drawEllipse();
+        // drawPencil([5, 70, 140, 23], 'red', 4)
+        // drawRect(20, 20, 122, 50, 'red', 4);
+
+        // 移除改变大小事件
+        stage.on('mousedown', function (e) {
+
+            // 如果点击空白处 移除图形选择框
+            if (e.target === stage) {
+
+                stageMousedown(flag, e);
+
+                //错误原因 查找后为 Transformer 对象的数组遍历删除
+
+                // 遍历移除图形选择框
+                // stage.find('Transformer').destroy();
+
+                let trans = stage.find('Transformer')
+
+                for (let i = 0; i < trans.length; ++i) {
+                    trans[i].destroy()
+                }
+
+                layer.draw();
+                return;
+            }
+            // 如果没有匹配到就终止往下执行
+            if (!e.target.hasName('line') && !e.target.hasName('ellipse') && !e.target.hasName('rect') && !e.target.hasName('circle') && !e.target.hasName('image')) {
+                return;
+            }
+            // 移除图形选择框
+            // stage.find('Transformer').destroy();
+
+            let trans = stage.find('Transformer')
+
+            for (let i = 0; i < trans.length; ++i) {
+                trans[i].destroy()
+            }
+
+
+            // 当前点击的对象赋值给graphNow
+            graphNow = e.target;
+            // 创建图形选框事件
+            const tr = new Konva.Transformer({
+                borderStroke: '#000', // 虚线颜色
+                borderStrokeWidth: 1, //虚线大小
+                borderDash: [5], // 虚线间距
+                keepRatio: false // 不等比缩放
+            });
+            layer.add(tr);
+            tr.attachTo(e.target);
+            layer.draw();
+        });
+
+        // 鼠标移动
+        stage.on('mousemove', function (e) {
+            if (graphNow && flag && drawing) {
+                stageMousemove(flag, e);
+            }
+        });
+
+        // 鼠标放开
+        stage.on('mouseup', function () {
+            drawing = false;
+            if (flag === 'text') flag = null;
+        });
+
+
+
+        function export2json() {
+            var json = stage.toJSON();
+            console.log(json)
+
+        }
+
+    </script>
+</body>
+
+</html>
