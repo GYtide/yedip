@@ -1,0 +1,45 @@
+.bpx {
+    margin: auto;
+    background-color: #ccc;
+    width: 1200px;
+    height: 800px;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+    grid-auto-rows: minmax(150px, auto);
+}
+
+.tool {
+    grid-column: 1 / 2;
+    grid-row: 1;
+    background: #19CAAD;
+}
+
+.sketchpad {
+    grid-column: 2 / 4;
+    grid-row: 1 / 5;
+    background: #8CC7B5;
+}
+
+.attr-list {
+    grid-row: 2 / 4;
+    grid-column: 1;
+    background: #D1BA74;
+    
+
+}
+
+.histogram {
+    grid-column: 1;
+    grid-row: 4;
+    background: #BEE7E9;
+}
+
+.item {
+    text-align: center;
+    font-size: 200%;
+    color: #fff;
+}
