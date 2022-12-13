@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>dip</title>
 </head>
 <link rel="stylesheet" href="./css/index.css">
 
@@ -46,6 +46,7 @@
 </body>
 <script src="../lib/konva/konva.js"></script>
 <script src="../src/store/index.js"></script>
+<script src="./store/Fileloader.js"></script>
 <script>
     let draw = [], // 绘制的图形数组
         graphNow = null, // 当前图形
@@ -81,6 +82,9 @@
             drawImage(this)
         }
         imageObj.src = '../res/ln.BMP'
+
+        console.log(imageObj.src)
+
         
     }
     // 点击绘图

@@ -1,0 +1,28 @@
+{
+  "name": "yedip",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GYtide/yedip.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GYtide/yedip/issues"
+  },
+  "homepage": "https://github.com/GYtide/yedip#readme",
+  "dependencies": {
+    "electron": "^22.0.0"
+  },
+  "devDependencies": {
+    "electron-reloader": "^1.2.3"
+  }
+}

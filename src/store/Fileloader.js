@@ -1,11 +1,9 @@
-var fs = require('fs');
 import { Dip, BITMAPFILEHEADER, BITMAPINFO, tagRGBQUAD } from '../filehandle/Dip.mjs'
 
-export class FileLoader {
+export class FileParser {
 
     constructor(file_url) {
         this.file_url = file_url
-        
     }
 
     OpenFile() {
