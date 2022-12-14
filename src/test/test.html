@@ -9,35 +9,12 @@
 </head>
 
 <body>
-    <a>asdas</a>
-    <div id="qqq">
-
-    </div>
-    <input id="file" type="file"></input>
+ <a value = 'aaa' id = 'aaa'>aaa</a>
 </body>
-<script>
+<script type="module">
 
 
-    function uploadfile() {
-        var fileObj = document.getElementById("file").files[0];
-        var reader = new FileReader();
-        reader.readAsArrayBuffer(fileObj);
-        reader.onload = function () {
-            var byts = new Uint8Array(this.result);
-            var bytarr = [];
-            for (var i = 0; i < byts.length; i++) {
-                bytarr.push(byts[i]);
-            }
-        }
-    }
-
-    var qqq = document.getElementById("qqq")
-    var imageObj = new Image();
-    imageObj.onload = function () {
-        qqq.appendChild(this)
-    }
-    imageObj.src = 'ln.BMP'
-
+   
 
 
 

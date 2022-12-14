@@ -1,74 +1,49 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://unpkg.com/konva@8.3.13/konva.min.js"></script>
-    <meta charset="utf-8" />
-    <title>Konva Zoom Relative to Stage Demo</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background-color: #f0f0f0;
-      }
-    </style>
-  </head>
+<html lang="en">
 
-  <body>
-    <div id="container"></div>
-    <script>
-      var width = window.innerWidth;
-      var height = window.innerHeight;
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dip</title>
+</head>
+<link rel="stylesheet" href="../css/index.css">
 
-      var stage = new Konva.Stage({
-        container: 'container',
-        width: width,
-        height: height,
-      });
+<body>
+    <div>
 
-      var layer = new Konva.Layer();
-      stage.add(layer);
+        <div class="wrapper">
+            <div class="tool item">
+                <button onclick="importImage()">导入图片</button>
+                <button onclick="importlnImage()">示例图片(莱娜图)</button>
 
-      var circle = new Konva.Circle({
-        x: stage.width() / 2,
-        y: stage.height() / 2,
-        radius: 50,
-        fill: 'green',
-      });
-      layer.add(circle);
+                <button onclick="removeFn();">清空画板</button>
+            </div>
+            <div class="sketchpad item" id="container">
+                <!-- <div id="container"></div> -->
+            </div>
+            <div class="attr-list item">
+                <label  style="font-size: 15px">原图像属性</label>
+                <br>
+                ----------------
+                <br>
+                <label style="font-size: 15px" >画板属性</label>
+                <br>
+                ----------------
+                <br>
+                <label style="font-size: 15px " >当前鼠标位置</label>
+            </div>
+            <div class="histogram item">
 
-      var scaleBy = 1.01;
-      stage.on('wheel', (e) => {
-        // stop default scrolling
-        e.evt.preventDefault();
+            </div>
+            <!-- <div class="five item">Five</div> -->
+            <!-- <div class="six item">Six</div> -->
+        </div>
+    </div>
+</body>
 
-        var oldScale = stage.scaleX();
-        var pointer = stage.getPointerPosition();
+<script>
 
-        var mousePointTo = {
-          x: (pointer.x - stage.x()) / oldScale,
-          y: (pointer.y - stage.y()) / oldScale,
-        };
+</script>
 
-        // how to scale? Zoom in? Or zoom out?
-        let direction = e.evt.deltaY > 0 ? 1 : -1;
-
-        // when we zoom on trackpad, e.evt.ctrlKey is true
-        // in that case lets revert direction
-        if (e.evt.ctrlKey) {
-          direction = -direction;
-        }
-
-        var newScale = direction > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-
-        stage.scale({ x: newScale, y: newScale });
-
-        var newPos = {
-          x: pointer.x - mousePointTo.x * newScale,
-          y: pointer.y - mousePointTo.y * newScale,
-        };
-        stage.position(newPos);
-      });
-    </script>
-  </body>
 </html>

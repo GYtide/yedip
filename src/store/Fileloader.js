@@ -1,20 +1,11 @@
-import { Dip, BITMAPFILEHEADER, BITMAPINFO, tagRGBQUAD } from '../filehandle/Dip.mjs'
+const { Dip, BITMAPFILEHEADER, BITMAPINFO } = require('./Dip.js')
 
-export class FileParser {
+ class FileParser {
 
-    constructor(file_url) {
-        this.file_url = file_url
-    }
+    constructor(fileBitStream) {
+        this.fileBitStream = fileBitStream
 
-    OpenFile() {
-        try {
-            //读取文件
-            var rbuf = fs.readFileSync(this.file_url);
-            // console.log(rbuf);
-        } catch (err) {
-            console.log(err);
-        }
-
+        this.bmpFile = this.handleFile(fileBitStream)
 
     }
 
@@ -27,6 +18,17 @@ export class FileParser {
         let infoBitStream = fileBitStream.slice(14, 54)
 
         let Info = this.getInfo(infoBitStream)
+
+        let colorBitStream = fileBitStream.slice(54,54+256*4)
+
+        let colorMap = this.getColorMap(colorBitStream)
+
+        let bitMapData = fileBitStream.slice(54+256*4,)
+
+        var bmpFile = new Dip(Header,Info,colorMap,bitMapData)
+
+        return bmpFile
+
 
     }
 
@@ -151,6 +153,8 @@ export class FileParser {
         var infoheader = new BITMAPINFO(biSize, biWidth, biWidth, biPlanes, biBitCount,biCompression,biSizeImage,
             biXPelsPerMeter,biYPelsPerMeter,biClrUsed,biClrImportant)
 
+        return infoheader
+
     }
     
     // 获取色表（调色板）
@@ -164,30 +168,14 @@ export class FileParser {
         
         for(let i = 0; i < biClrUsedSize ; ++i)
         {
-            let tmpColor = colorStream.slice(4*i,4*i+4)
+            let tmpColor = colorBitStream.slice(4*i,4*i+4)
 
             colorMap[i] = {'R':tmpColor[0],'G':tmpColor[1],'B':tmpColor[2],'A':tmpColor[3]}
-        
+
         }
 
         return colorMap
 
-
-    }
-
-    // 解析数据
-    getData(dataBitStream,width,height) {
-
-        let bitMapData = [width][height]
-
-        for(let i = 0 ; i < width ; ++i)
-        {
-
-            for(let j = 0 ; j < height ; ++j)
-            {
-                 
-            }
-        }
 
     }
 
@@ -236,3 +224,5 @@ function hex2dec(hexstream, bits, lor = 0) {
 
 
 }
+
+module.exports = {FileParser}

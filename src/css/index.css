@@ -7,9 +7,9 @@
 
 .wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px;
-    grid-auto-rows: minmax(150px, auto);
+    grid-auto-rows: minmax(90px, auto);
 }
 
 .tool {
@@ -19,22 +19,22 @@
 }
 
 .sketchpad {
-    grid-column: 2 / 4;
-    grid-row: 1 / 5;
+    grid-column: 2 / 5;
+    grid-row: 1 / 6;
     background: #8CC7B5;
 }
 
 .attr-list {
-    grid-row: 2 / 4;
+    grid-row: 2 / 7;
     grid-column: 1;
     background: #D1BA74;
-    
 
+    
 }
 
 .histogram {
-    grid-column: 1;
-    grid-row: 4;
+    grid-column: 2/5;
+    grid-row: 5/7;
     background: #BEE7E9;
 }
 

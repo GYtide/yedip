@@ -57,25 +57,25 @@ function BITMAPINFO(biSize, biWidth, biHeight, biPlanes, biBitCount,
 
 }
 
-// 彩色表/调色板（color table）
-function tagRGBQUAD(rgbBlue, rgbGreen, rgbRed, rgbReserved) {
+// // 彩色表/调色板（color table）
+// function tagRGBQUAD(rgbBlue, rgbGreen, rgbRed, rgbReserved) {
 
-    // R分量
-    this.rgbBlue = rgbBlue
+//     // R分量
+//     this.rgbBlue = rgbBlue
 
-    // G 分量
-    this.rgbGreen = rgbGreen
+//     // G 分量
+//     this.rgbGreen = rgbGreen
 
-    // B 分量
-    this.rgbRed = rgbRed
+//     // B 分量
+//     this.rgbRed = rgbRed
 
-    // 保留字
-    this.rgbReserved = rgbReserved
-}
+//     // 保留字
+//     this.rgbReserved = rgbReserved
+// }
 
 
 // 位图类
-class Dip {
+ class Dip {
 
     constructor(BITMAPFILEHEADER, BITMAPINFO, tagRGBQUAD, bitMapData) {
 
@@ -95,10 +95,9 @@ class Dip {
 }
 
 
-export {
+ module.exports = {
     BITMAPFILEHEADER,
     BITMAPINFO,
-    tagRGBQUAD,
     Dip
 }
 

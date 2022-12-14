@@ -1,18 +1,13 @@
-class Test{
-    constructor(ppp){
-        this.na = ppp
-        this.name()
-    }
-
-    name() {
-        console.log(this.na)
-    }
+const {FileParser} = require('../store/Fileloader')
+const fs = require('fs')
+try {
+    //读取文件
+    var rbuf = fs.readFileSync('E:/_todo/dip_expe/yedip/src/test/ln.BMP');
+    // console.log(rbuf);
+} catch (err) {
+    console.log(err);
 }
 
-var imageObj = new Image();
-imageObj.onload = function () {
-    drawImage(this)
-}
-imageObj.src = '../res/ln.BMP'
+var fileloader = new FileParser(rbuf)
 
-console.log(imageObj)
+console.log(fileloader.bmpFile.BITMAPINFO)

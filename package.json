@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "directories": {
     "lib": "lib"
   },
@@ -20,7 +21,9 @@
   },
   "homepage": "https://github.com/GYtide/yedip#readme",
   "dependencies": {
-    "electron": "^22.0.0"
+    "electron": "^22.0.0",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
   },
   "devDependencies": {
     "electron-reloader": "^1.2.3"

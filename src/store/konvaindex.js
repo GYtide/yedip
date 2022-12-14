@@ -3,8 +3,8 @@ function drawImage(imageObj) {
     var Img = new Konva.Image({
         name : 'image',
         image : imageObj,
-        x:stage.width()/2 -200/2,
-        y:stage.height()/2 -120/2,
+        x:stage.width()/2 -imageObj.width/2,
+        y:stage.height()/2 -imageObj.height/2,
         width : 256,
         height : 256,
         draggable : true
