@@ -1,10 +1,3 @@
-.bpx {
-    margin: auto;
-    background-color: #ccc;
-    width: 1200px;
-    height: 800px;
-}
-
 .wrapper {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -15,19 +8,25 @@
 .tool {
     grid-column: 1 / 2;
     grid-row: 1;
-    background: #19CAAD;
+    /* background: #19CAAD; */
+    border-style: solid;
+    border-color: #2dbeea;
 }
 
 .sketchpad {
     grid-column: 2 / 5;
-    grid-row: 1 / 6;
-    background: #8CC7B5;
+    grid-row: 1 / 5;
+    /* background: #8CC7B5; */
+    border-style: solid;
+  border-color: #2dbeea;
 }
 
 .attr-list {
     grid-row: 2 / 7;
     grid-column: 1;
-    background: #D1BA74;
+    /* background: #D1BA74; */
+    border-style: solid;
+    border-color: #2dbeea;
 
     
 }
@@ -35,11 +34,13 @@
 .histogram {
     grid-column: 2/5;
     grid-row: 5/7;
-    background: #BEE7E9;
+    /* background: #BEE7E9; */
+    border-style: solid;
+    border-color: #2dbeea;
 }
 
 .item {
     text-align: center;
-    font-size: 200%;
-    color: #fff;
+    font-size: 100%;
+    color: #000;
 }

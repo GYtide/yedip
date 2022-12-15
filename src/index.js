@@ -25,8 +25,9 @@ app.on('window-all-closed', function () {
   app.on('ready', function () {
     // 创建浏览器窗口。
     mainWindow = new BrowserWindow({
-       width: 1500,
+        width: 1500,
         height: 1000, 
+        resizable : false,
         // 在渲染进程中使用 node 模块 更改webPreference 
         webPreferences: { 
                           nodeIntegration: true ,

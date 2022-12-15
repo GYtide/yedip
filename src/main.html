@@ -8,6 +8,7 @@
     <title>dip</title>
 </head>
 <link rel="stylesheet" href="./css/index.css">
+<link rel="stylesheet" href="./css/attrList.css">
 
 <body>
     <div>
@@ -31,15 +32,63 @@
                 <!-- <div id="container"></div> -->
             </div>
             <div class="attr-list item">
-                <label  style="font-size: 15px">原图像属性</label>
-                <br>
-                ----------------
-                <br>
-                <label style="font-size: 15px" >画板属性</label>
-                <br>
-                ----------------
-                <br>
-                <label style="font-size: 15px " >当前鼠标位置</label>
+
+                <input type="radio" id="hotRank" name="radio" checked />
+                <label class="index" for="hotRank">画板信息</label>
+                <input type="radio" id="commentRank" name="radio" />
+                <label class="index" for="commentRank">图片属性</label>
+                <div class="content">
+                    <div id="content1">
+                        <ul>
+                            <li class="contentIndex">
+                                <label class="">鼠标位置</label>
+                                <br>
+                                <label class="attrContent">X :</label>
+                                <input id="mousex" type="text" value="" disabled class="attrinfo">
+                                <label class="attrContent">Y :</label>
+                                <input id="mousey" type="text" value="" disabled class="attrinfo">
+
+                            </li>
+                            <li class="contentIndex">
+                                <label class="">图形信息</label>
+                                <br>
+                                <label class="attrContent">ID :</label>
+                                <input id="bmpid" type="text" value="" disabled class="attrinfo">
+                                <label class="attrContent">INDEX:</label>
+                                <input id="bmpindex" type="text" value="" disabled class="attrinfo">
+                            </li>
+                            <li class="contentIndex">
+                                <label class="">图像位置</label>
+                                <br>
+                                <label class="attrContent">X :</label>
+                                <input id="bmpx" type="text" value="" disabled class="attrinfo">
+                                <label class="attrContent">Y :</label>
+                                <input id="bmpy" type="text" value="" disabled class="attrinfo">
+                            </li>
+                            <li class="contentIndex">
+                                <label class="attrchoice">是否使用 Transformer :</label>
+                                <input id="transformer" style="zoom: 150%;" type="checkbox"
+                                    onclick="transformerOclick(this)" value="" class="attrinfo">
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="content2">
+                        <ul>
+                            <li>
+                                <label class="contentIndex">01</label>
+                                <label class="textContent">习近平告诉你我们的制度为什么好...</label>
+                                <label class="readTimes">999999</label>
+                            </li>
+                            <li>
+                                <label class="contentIndex">02</label>
+                                <label class="textContent">习近平告诉你我们的制度为什么好.....</label>
+                                <label class="readTimes">999999</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
             <div class="histogram item">
 
@@ -56,7 +105,7 @@
     // 文件读取模块
     const fs = require('fs')
     const path = require('path')
-    const {FileParser} = require('E:/_todo/dip_expe/yedip/src/store/Fileloader.js')
+    const { FileParser } = require('E:/_todo/dip_expe/yedip/src/store/Fileloader.js')
 
     let draw = [], // 绘制的图形数组
         graphNow = null, // 当前图形
@@ -64,9 +113,26 @@
         drawing = false, // 绘制中
         graphColor = 'red',
         pointStart = []; // 初始坐标
-    
+
     // var 
-    
+
+    // =======================全局监控变量==============
+    // 是否显示  Transformer 
+    var transformer = document.getElementById('transformer')
+
+    // 鼠标坐标
+    var mousex = document.getElementById('mousex')
+    var mousey = document.getElementById('mousey')
+
+    //当前选中图形的 id
+    var bmpid = document.getElementById('bmpid')
+    //当前选中图形的 index （场上所有图像的相对顺序）
+    var bmpindex = document.getElementById('bmpindex')
+    // 当前选中图形的 坐标
+
+    var bmpx = document.getElementById('bmpx')
+    var bmpy = document.getElementById('bmpy')
+
 
     function importImage() {
         let input = document.createElement('input');
@@ -133,6 +199,11 @@
             aShape[0].destroy()
         }
         aShape = stage.children[0].children
+
+        bmpid.value = ""
+        bmpindex.value = ""
+        bmpx.value = ""
+        bmpy.value = ""
         // console.log(aShape)
         // console.log('========================')
 
@@ -142,21 +213,24 @@
     const stage = new Konva.Stage({
         container: 'container',
         width: 1100,
-        height: 800
+        height: 700
     });
 
     // 2 create layer
     const layer = new Konva.Layer();
     stage.add(layer);
-    
-    
-    
+
+
+
     // 移除改变大小事件
 
     stage.on('mousedown', function (e) {
 
         // 如果点击空白处 移除图形选择框
         if (e.target === stage) {
+            console.log('========================')
+            // console.log(aShape.length, '   ', aShape)
+            // console.log()
 
             // stageMousedown(flag, e);
 
@@ -170,12 +244,18 @@
             for (let i = 0; i < trans.length; ++i) {
                 trans[i].destroy()
             }
+            // 清空现在活动图形的信息
+            bmpid.value = ""
+            bmpindex.value = ""
+            bmpx.value = ""
+            bmpy.value = ""
 
             layer.draw();
             return;
         }
         // 如果没有匹配到就终止往下执行
         if (!e.target.hasName('line') && !e.target.hasName('ellipse') && !e.target.hasName('rect') && !e.target.hasName('circle') && !e.target.hasName('image')) {
+
             return;
         }
         // 移除图形选择框
@@ -188,14 +268,25 @@
         }
 
         // aShape = stage.children[0].children
-        console.log('========================')
-        // console.log(aShape.length, '   ', aShape)
-        console.log(graphNow)
 
 
         // 当前点击的对象赋值给graphNow
         graphNow = e.target;
-        // 创建图形选框事件
+
+        // console.log(graphNow)
+
+        bmpid.value = graphNow._id
+        bmpindex.value = graphNow.index
+
+        bmpx.value = graphNow.attrs.x
+        bmpy.value = graphNow.attrs.y
+
+
+
+        // 如果允许使用 Transformer 创建图形选框事件
+        if (!transformer.checked) {
+            return
+        }
         const tr = new Konva.Transformer({
             borderStroke: '#000', // 虚线颜色
             borderStrokeWidth: 1, //虚线大小
@@ -207,17 +298,29 @@
         layer.draw();
     });
 
+    // 
+
     // 鼠标移动
     stage.on('mousemove', function (e) {
+        // console.log(e)
         if (graphNow && flag && drawing) {
             stageMousemove(flag, e);
         }
     });
 
-    // 鼠标指针移动
-    stage.on('pointermove',function(e){
-        console.log(e)
+    // 鼠标指针移动,显示鼠标实时坐标
+    stage.on('pointermove', function (e) {
+        // console.log(e.evt.layerX)
+        mousex.value = e.evt.layerX
+        // console.log(mousex)
+        mousey.value = e.evt.layerY
 
+    })
+
+    stage.on('mouseleave', function () {
+        // 鼠标移出画布是
+        mousex.value = ""
+        mousey.value = ""
     })
 
     // 鼠标放开
@@ -230,7 +333,21 @@
         var json = stage.toJSON();
         console.log(json)
 
+
     }
+
+    // 监控 checkbox 事件,如果转为不使用 transformer 状态，清除现有的 transformer 框
+    function transformerOclick(checkbox) {
+        if (!checkbox.checked) {
+            // 清除所有 transformer 框
+            let trans = stage.find('Transformer')
+
+            for (let i = 0; i < trans.length; ++i) {
+                trans[i].destroy()
+            }
+        }
+    }
+
 </script>
 
 </html>

@@ -10,6 +10,12 @@ function drawImage(imageObj) {
         draggable : true
     });
 
+    Img.on('dragmove',function(){
+        // console.log(this)
+        bmpx.value = this.attrs.x
+        bmpy.value = this.attrs.y
+    })
+
     Img.on('mouseover',function(){
         document.body.style.cursor = 'pointer';
     });
@@ -31,6 +37,12 @@ function drawImage(imageObj) {
 
             trans[i].destroy()
         }
+
+        // 移除选中信息
+        bmpid.value = ""
+        bmpindex.value = ""
+        bmpx.value = ""
+        bmpy.value = ""
         layer.draw();
     });
 
