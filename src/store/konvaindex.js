@@ -1,29 +1,54 @@
 function drawImage(imageObj) {
 
+    
+    // 为了使用像素进行自定义操作，使用 canvas 作为子容器承载 Image dom
+    var canvas = document.createElement('canvas');
+    canvas.width = imageObj.width
+    canvas.height = imageObj.height
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(imageObj, 0, 0)
+    
     var Img = new Konva.Image({
-        name : 'image',
-        image : imageObj,
-        x:stage.width()/2 -imageObj.width/2,
-        y:stage.height()/2 -imageObj.height/2,
-        width : 256,
-        height : 256,
-        draggable : true
+        name: 'image',
+        image: canvas,
+        x: stage.width() / 2 - imageObj.width / 2,
+        y: stage.height() / 2 - imageObj.height / 2,
+        width: imageObj.width,
+        height: imageObj.width,
+        draggable: true
     });
 
-    Img.on('dragmove',function(){
-        // console.log(this)
+    graphNow = Img
+        
+    // 添加属性 即各种图像处理后的像素矩阵,提前生成，方便替换 canvas 视图
+
+    // 添加原图像
+    let catx = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
+    let imdata = catx.data
+     
+    Img.srcImage = imdata
+    
+    // 加权平均灰度化
+    Img.grayImage = weightGray(imdata)
+    
+    // 平均灰度化
+    Img.meangrayImage = meanGray(imdata)
+
+    Img.on('dragmove', function () {
+
         bmpx.value = this.attrs.x
         bmpy.value = this.attrs.y
     })
 
-    Img.on('mouseover',function(){
+    Img.on('mouseover', function () {
         document.body.style.cursor = 'pointer';
     });
 
-    Img.on('mouseout',function(){
+    Img.on('mouseout', function () {
         document.body.style.cursor = 'default';
     });
     layer.add(Img);
+    
     layer.draw();
     Img.on('dblclick', function () {
         // 双击删除自己
@@ -45,6 +70,8 @@ function drawImage(imageObj) {
         bmpy.value = ""
         layer.draw();
     });
+
+
 
 }
 

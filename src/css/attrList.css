@@ -68,6 +68,14 @@ input[type="radio"]:checked+label+div {
 
 }
 
+.attrbtn {
+    width: 90px;
+    /* margin: auto; */
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+}
+
 #hotRank:checked~.content>#content1,
 #commentRank:checked~.content>#content2{
     display: block;

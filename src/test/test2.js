@@ -1,7 +1,14 @@
-function aa(){
-   console.log('yeasd')
-}
+const fs = require('fs')
+const path = require('path')
+const { FileParser } = require('E:/_todo/dip_expe/yedip/src/store/Fileloader.js')
 
-export default{
-    aa
+try {
+    //读取文件
+    var rbuf = fs.readFileSync('res/ln.BMP');
+    // console.log(rbuf);
+} catch (err) {
+    console.log(err);
 }
+var fileloader = new FileParser(rbuf)
+
+console.log(fileloader.bmpFile)

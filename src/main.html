@@ -66,10 +66,19 @@
                                 <input id="bmpy" type="text" value="" disabled class="attrinfo">
                             </li>
                             <li class="contentIndex">
+                                <label class="">灰度变化</label>
+                                <br>
+                                <button class="attrbtn" onclick="rgb2gray()">加权灰度化</button>
+                                <button class="attrbtn" onclick="rgb2gray('mean')">平均灰度化</button>
+                                <button class="attrbtn" onclick="return2src()">还原为原图</button>
+                                <button class="attrbtn">均衡直方图</button>
+                            </li>
+                            <li class="contentIndex">
                                 <label class="attrchoice">是否使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
                                     onclick="transformerOclick(this)" value="" class="attrinfo">
                             </li>
+
                         </ul>
                     </div>
 
@@ -100,6 +109,8 @@
 </body>
 <script src="../lib/konva/konva.js"></script>
 <script src="../src/store/konvaindex.js"></script>
+<script src="./store/attrList.js"></script>
+<script src="./store/store.js"></script>
 <script>
     // import * as fs from 'fs';
     // 文件读取模块
@@ -132,6 +143,8 @@
 
     var bmpx = document.getElementById('bmpx')
     var bmpy = document.getElementById('bmpy')
+
+
 
 
     function importImage() {
@@ -189,8 +202,6 @@
         // 清除图形
 
         aShape = stage.children[0].children
-        // console.log('========================')
-        console.log(aShape.length, '   ', aShape)
 
         // destroy 后 aShape的长度会改变，
         let alength = aShape.length
@@ -249,6 +260,7 @@
             bmpindex.value = ""
             bmpx.value = ""
             bmpy.value = ""
+            graphNow = null
 
             layer.draw();
             return;
@@ -273,7 +285,9 @@
         // 当前点击的对象赋值给graphNow
         graphNow = e.target;
 
-        // console.log(graphNow)
+        console.log(graphNow)
+
+        // console.log(catx)
 
         bmpid.value = graphNow._id
         bmpindex.value = graphNow.index
@@ -346,6 +360,20 @@
                 trans[i].destroy()
             }
         }
+        else {
+            if (graphNow) {
+                const tr = new Konva.Transformer({
+                    borderStroke: '#000', // 虚线颜色
+                    borderStrokeWidth: 1, //虚线大小
+                    borderDash: [5], // 虚线间距
+                    keepRatio: false // 不等比缩放
+                });
+                layer.add(tr);
+                tr.attachTo(graphNow);
+                layer.draw();
+            }
+        }
+
     }
 
 </script>
