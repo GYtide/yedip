@@ -14,4 +14,4 @@ try {
 
 var p = new FileParser(rbuf)
 
-console.log(p.bmpFile.BITMAPFILEHEADER.bfType)
+console.log(p.bmpFile)

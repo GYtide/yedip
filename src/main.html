@@ -70,15 +70,46 @@
                             <li class="contentIndex">
                                 <label class="">灰度变化</label>
                                 <br>
+                                <button class="attrbtn" onclick="return2src()">还原为原图</button>
                                 <button class="attrbtn" onclick="rgb2gray()">加权灰度化</button>
                                 <button class="attrbtn" onclick="rgb2gray('mean')">平均灰度化</button>
-                                <button class="attrbtn" onclick="return2src()">还原为原图</button>
                                 <button class="attrbtn" onclick="Equalization()">均衡直方图</button>
+                            </li>
+                            <li class="contentIndex">
+                                <label class="">噪声抑制</label>
+                                <br>
+                                <button class="attrbtn" onclick="addGaussiannoise()">添加随机噪声</button>
+                                <button class="attrbtn" onclick="addPretzelnoise()">添加椒盐噪声</button>
+                                <button class="attrbtn" onclick="Meanvaluefiltering()">均值滤波</button>
+                                <button class="attrbtn" onclick="Medianvaluefiltering()">中值滤波</button>
+                            </li>
+                            <li class="contentIndex">
+                                <label class="">锐化和边缘检测</label>
+                                <br>
+                                <button class="attrbtn" onclick="Horizontalsharpening()">水平一阶锐化</button>
+                                <button class="attrbtn" onclick="rgb2gray('mean')">二阶微分锐化</button>
+                            </li>
+                            <li class="contentIndex">
+                                <label class="">分割测量</label>
+                                <br>
+                                <button class="attrbtn" onclick="rgb2gray()">迭代阈值分割</button>
+                                <button class="attrbtn" onclick="rgb2gray('mean')">边界分割</button>
+                            </li>
+                            <li class="contentIndex">
+                                <label class="">二值处理</label>
+                                <br>
+                                <button class="attrbtn" onclick="rgb2gray()">二值化</button>
+                                <button class="attrbtn" onclick="rgb2gray()">水平腐蚀</button>
+                                <button class="attrbtn" onclick="rgb2gray('mean')">水平膨胀</button>
+                                <button class="attrbtn" onclick="rgb2gray('mean')">孤立点去除</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="attrchoice">使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
                                     onclick="transformerOclick(this)" value="" class="attrinfo">
+                                    <div style="font-size: 10px;">
+                                         注：绘图框架的 transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
+                                    </div>
                             </li>
 
                         </ul>
@@ -94,7 +125,7 @@
                        </div>
                         
                         位图文件头
-                        <div class="table" id="table">
+                        <div class="table" id="fileheader">
                             <div class="table-row-group">
                                 <ul class="table-row">
                                     <li class="table-cell">
@@ -123,7 +154,7 @@
                             </div>
                         </div>
                         位图信息头
-                        <div class="table" id="table">
+                        <div class="table" id="infotable">
                             <div class="table-row-group">
                                 <ul class="table-row">
                                     <li class="table-cell">
@@ -303,6 +334,7 @@
 
         // 清空直方图
         graphNow = null
+        updateImageinfoPan()
         clearHistogram()
 
     }
@@ -348,6 +380,7 @@
             bmpx.value = ""
             bmpy.value = ""
             graphNow = null
+            updateImageinfoPan()
             clearHistogram()
 
             layer.draw();
@@ -384,6 +417,7 @@
         bmpy.value = graphNow.attrs.y
 
         // 创建该图形的直方图
+        updateImageinfoPan()
 
         clearHistogram()
         let cans = graphNow.getImage().getContext('2d')

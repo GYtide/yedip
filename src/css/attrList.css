@@ -73,6 +73,7 @@ input[type="radio"]:checked+label+div {
     float: left;
     margin-bottom: 10px;
     color:rgb(19, 44, 120);
+
 }
 
 .attrContent {
@@ -102,7 +103,7 @@ input[type="radio"]:checked+label+div {
 }
 
 .attrbtn {
-    width: 90px;
+    width: 110px;
     height: 30px;
     /* width: 90px; */
     /* margin: auto; */

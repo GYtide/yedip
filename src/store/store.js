@@ -56,7 +56,7 @@ function meanGray(imdata) {
  * @param imdata 原始像素数组
  */
 
-function histogramData(imdata) {    
+function histogramData(imdata) {
     // 统计每一个像素点的RGB三通道
     rNumber = new Array(256).fill(0);
     gNumber = new Array(256).fill(0);
@@ -84,7 +84,7 @@ function histogramData(imdata) {
         }
 
     }
-    return { 'rNumber': rNumber, 'rmax' :rmax,'gNumber': gNumber,'gmax' :gmax, 'bNumber': bNumber ,'bmax' :bmax}
+    return { 'rNumber': rNumber, 'rmax': rmax, 'gNumber': gNumber, 'gmax': gmax, 'bNumber': bNumber, 'bmax': bmax }
 
 }
 
@@ -93,7 +93,7 @@ function histogramData(imdata) {
  * @param imdata 原始像素数组 
  * 
 */
-function HistogramEqualization(imdata){
+function HistogramEqualization(imdata) {
     // 计算直方图,使用时已经灰度化,使用任意 RGB 值作为灰度值
 
 
@@ -102,19 +102,191 @@ function HistogramEqualization(imdata){
 
     var cumuhist = [] //各灰度的累积分布
     cumuhist[0] = hist[0]
-    for(let i = 1 ; i < 256 ; ++i){
-        cumuhist[i] = cumuhist[i-1] + hist[i]
+    for (let i = 1; i < 256; ++i) {
+        cumuhist[i] = cumuhist[i - 1] + hist[i]
     }
 
     // 归一化
 
-    for(let i = 0 ; i < 256 ; ++i){
-        cumuhist[i] = cumuhist[i]/(imdata.length/4)
+    for (let i = 0; i < 256; ++i) {
+        cumuhist[i] = cumuhist[i] / (imdata.length / 4)
     }
 
     // 均衡化  imdata 的灰度值替换为 其累积分布 * 255
 
-    for(let i = 0; i < imdata.length ; i = i+4){
-        imdata[i] = Math.round(cumuhist[imdata[i]]*255)
+    for (let i = 0; i < imdata.length; i = i + 4) {
+        imdata[i] = Math.round(cumuhist[imdata[i]] * 255)
     }
+}
+
+
+/**
+ * 添加随机噪声 Gaussiannoise
+ * @param imdata 原始像素数组
+ */
+
+function Gaussiannoise(imdata, type) {
+    if (type == 'rgb') {
+        for (let j = 0; j < imdata.length; j += 4) {
+
+            noisepoint = Math.round(Math.random() * 60 - 30); //-30 - 60随机数
+            if (imdata[j] + noisepoint > 255) {
+                imdata[j] = 255
+            } else if (imdata[j] + noisepoint < 0) {
+                imdata[j] = 0
+            }
+            else {
+
+                imdata[j] = imdata[j] + noisepoint;
+            }
+            if (imdata[j + 1] + noisepoint > 255) {
+                imdata[j + 1] = 255
+            } else if (imdata[j + 1] + noisepoint < 0) {
+                imdata[j + 1] = 0
+            }
+            else {
+
+                imdata[j + 1] = imdata[j + 1] + noisepoint;
+            }
+            if (imdata[j + 2] + noisepoint > 255) {
+                imdata[j + 2] = 255
+            } else if (imdata[j + 2] + noisepoint < 0) {
+                imdata[j + 2] = 0
+            }
+            else {
+
+                imdata[j + 2] = imdata[j + 2] + noisepoint;
+            }
+        }
+    }
+    else {
+        for (let j = 0; j < imdata.length; j += 4) {
+
+            noisepoint = Math.round(Math.random() * 60 - 30); //-30 - 60随机数
+            if (imdata[j] + noisepoint > 255) {
+                imdata[j] = imdata[j + 1] = imdata[j + 2] = 255
+            } else {
+
+                imdata[j] = imdata[j + 1] = imdata[j + 2] = imdata[j] + noisepoint;
+            }
+        }
+    }
+
+
+    return true;
+
+}
+
+
+/**
+ * 添加椒盐噪声 Pretzelnoise
+ * @param imdata 原始像素数组
+ */
+
+function Pretzelnoise(imdata, type) {
+    if (type == 'rgb') {
+        for (let j = 0; j < imdata.length; j += 4) {
+
+            noisepoint = Math.random(); //0-1随机数
+            if (noisepoint > 0.99) {
+                imdata[j] = 0
+            }
+            else if (noisepoint < 0.01) {
+
+                imdata[j] = 255
+            }
+            noisepoint = Math.random(); //0-1随机数
+            if (noisepoint > 0.99) {
+                imdata[j + 1] = 0
+            }
+            else if (noisepoint < 0.01) {
+
+                imdata[j + 1] = 255
+            }
+            noisepoint = Math.random(); //0-1随机数
+            if (noisepoint > 0.99) {
+                imdata[j + 2] = 0
+            }
+            else if (noisepoint < 0.01) {
+
+                imdata[j + 2] = 255
+            }
+        }
+    }
+    else {
+        for (let j = 0; j < imdata.length; j += 4) {
+
+            noisepoint = Math.random(); //0-1随机数
+            if (noisepoint > 0.99) {
+                imdata[j] = imdata[j + 1] = imdata[j + 2] = 0
+            }
+            else if (noisepoint < 0.01) {
+
+                imdata[j] = imdata[j + 1] = imdata[j + 2] = 255
+            }
+        }
+    }
+
+
+    return true;
+}
+
+/**
+ * 均值滤波
+ * @param imdata 原始像素数组
+ */
+function Meanvaluefilter(imdata, width, height) {
+    for (let j = 1; j < height; ++j) {
+        for (let i = 1; i < width; ++i) {
+            averg = 0;
+            //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
+            averg = Math.round(imdata[(j - 1) * width + (i - 1)] + imdata[(j - 1) * width + i]
+                + imdata[(j - 1) * width + (i + 1)] + imdata[j * width + (i - 1)]
+                + imdata[j * width + i + 1] + imdata[(j + 1) * width + (i - 1)]
+                + imdata[(j + 1) * width + i] + imdata[(j + 1) * width + i + 1]) / 8;
+            imdata[j * width + i] = averg;
+        }
+    }
+    console.log(imdata)
+    return true;
+
+}
+
+/**
+ * 中值滤波
+ * @param imdata 原始像素数组
+ */
+function Medianvaluefilter(imdata, width, height) {
+
+    // 排序
+
+    function sort(arr) {
+        for (var j = 0; j < arr.length - 1; j++) {
+            for (var i = 0; i < arr.length - 1; i++) {
+                // 如果前一个数 大于 后一个数 就交换两数位置
+                if (arr[i] > arr[i + 1]) {
+                    var temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                }
+            }
+        }
+    }
+
+    for (let j = 1; j < height; ++j) {
+        for (let i = 1; i < width; ++i) {
+            averg = 0;
+            //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
+
+            arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
+            imdata[(j - 1) * width + (i + 1)], imdata[j * width + (i - 1)]
+                , imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
+                , imdata[(j + 1) * width + i], imdata[(j + 1) * width + i + 1]]
+            sort(arr)
+            medv = arr[4]
+            imdata[j * width + i] = medv;
+        }
+    }
+    console.log(imdata)
+    return true;
 }
