@@ -1,14 +1,17 @@
 const fs = require('fs')
-const path = require('path')
-const { FileParser } = require('E:/_todo/dip_expe/yedip/src/store/Fileloader.js')
+    const path = require('path')
+    const { FileParser } = require(path.join(path.resolve(__dirname,'..'), 'store', 'Fileloader.js'))
 
+
+var imageObj = {src : path.join(path.resolve(__dirname,'../..'),'res','ln.BMP' )}
 try {
     //读取文件
-    var rbuf = fs.readFileSync('res/ln.BMP');
-    // console.log(rbuf);
+    var rbuf = fs.readFileSync(imageObj.src);
+    console.log(imageObj.src );
 } catch (err) {
     console.log(err);
 }
-var fileloader = new FileParser(rbuf)
 
-console.log(fileloader.bmpFile)
+var p = new FileParser(rbuf)
+
+console.log(p.bmpFile.BITMAPFILEHEADER.bfType)

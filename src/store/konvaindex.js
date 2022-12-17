@@ -1,13 +1,27 @@
 function drawImage(imageObj) {
 
-    
+    let srcstring = imageObj.src
+    // 去除 路径前的 file:/// 否则 ndoe 无法读取
+    srcstring = srcstring.slice(8,)
+    // console.log(typeof srcstring);
+    // 添加文件属性
+    try {
+        //读取文件
+        var rbuf = fs.readFileSync(srcstring);
+    } catch (err) {
+        console.log(err);
+        alert("文件读取失败")
+        return
+    }
+    var newFile = new FileParser(rbuf)
+
     // 为了使用像素进行自定义操作，使用 canvas 作为子容器承载 Image dom
     var canvas = document.createElement('canvas');
     canvas.width = imageObj.width
     canvas.height = imageObj.height
     var ctx = canvas.getContext('2d');
     ctx.drawImage(imageObj, 0, 0)
-    
+
     var Img = new Konva.Image({
         name: 'image',
         image: canvas,
@@ -19,20 +33,43 @@ function drawImage(imageObj) {
     });
 
     graphNow = Img
+    console.log(Img._id)
+   
+    // 存放源文件属性
+    ddrawShape[Img._id] = {
+        'header': newFile.bmpFile.BITMAPFILEHEADER,
+        'info' : newFile.bmpFile.BITMAPINFO,
         
+    }
+
     // 添加属性 即各种图像处理后的像素矩阵,提前生成，方便替换 canvas 视图
 
     // 添加原图像
     let catx = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
     let imdata = catx.data
-     
+
     Img.srcImage = imdata
-    
+
     // 加权平均灰度化
     Img.grayImage = weightGray(imdata)
-    
+
     // 平均灰度化
     Img.meangrayImage = meanGray(imdata)
+
+    // 添加 rgb 或 gray 标记
+
+    Img.type = 'rgb'
+
+    // 画 RGB 直方图
+    // 清空现有直方图
+    clearHistogram()
+
+    let hisdata = histogramData(imdata)
+
+    // console.log(hisdata)
+    drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
+    drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
+    drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
 
     Img.on('dragmove', function () {
 
@@ -48,7 +85,7 @@ function drawImage(imageObj) {
         document.body.style.cursor = 'default';
     });
     layer.add(Img);
-    
+
     layer.draw();
     Img.on('dblclick', function () {
         // 双击删除自己
@@ -68,12 +105,22 @@ function drawImage(imageObj) {
         bmpindex.value = ""
         bmpx.value = ""
         bmpy.value = ""
+
+        // 双击时 graphNow 必然是 this
+        graphNow = null
+
+        // 清空直方图
+        clearHistogram()
+
         layer.draw();
     });
 
 
+    // console.log(p.bmpFile)
 
 }
+
+
 
 /**
  * 铅笔
@@ -287,4 +334,12 @@ function stageMousemove(flag, ev) {
             break;
     }
     layer.draw();
+}
+
+/** 
+ * 更新图片属性面板
+ * 
+*/
+function updateImageinfoPan() {
+
 }

@@ -36,7 +36,7 @@ const { Dip, BITMAPFILEHEADER, BITMAPINFO } = require('./Dip.js')
     getHeader(headerBitStream) {
 
         // 2字节 位图类别，根据不同的操作系统而不同，在Windows中，此字段的值总为‘BM’
-        let bfType = headerBitStream.slice(0, 2)
+        let bfType = headerBitStream.slice(0, 2) + ""
 
         // 4字节 BMP图像文件的大小
         let sizeBitStream = headerBitStream.slice(2, 6)

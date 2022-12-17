@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+    function HistogramEqualization(imdata, width, height) {
+        // 计算直方图,使用时已经灰度化,使用任意 RGB 值作为灰度值
+
+        var hist = histogramData(imdata).rNumber
+
+        // 计算累积分布
+
+        var cumuhist = [] //各灰度的累积分布
+        cumuhist[0] = hist[0]
+        for (let i = 1; i < 256; ++i) {
+            cumuhist[i] = cumuhist[i - 1] + hist[i]
+        }
+
+        // 归一化累积分布
+        for (let i = 0; i < 256; ++i) {
+            cumuhist[i] = cumuhist[i] / (width * height)
+        }
+        console.log(cumuhist)
+
+        // 均衡化直方图
+
+
+        // 均衡化  imdata 的灰度值替换为 其累积分布 * 255
+
+        for (let i = 0; i < width * height;i = i +4) {
+            imdata[i] = Math.round(cumuhist[imdata[i]]*255)
+        }
+
+
+
+    }
+    function histogramData(imdata) {
+        // 统计每一个像素点的RGB三通道
+        rNumber = new Array(256).fill(0);
+        gNumber = new Array(256).fill(0);
+        bNumber = new Array(256).fill(0);
+
+        var rmax = 0
+        var gmax = 0
+        var bmax = 0
+
+        for (let i = 0; i < imdata.length; i += 4) {
+            rNumber[imdata[i]]++;
+            gNumber[imdata[i + 1]]++;
+            bNumber[imdata[i + 2]]++;
+            // console.log(imdata[i], imdata[i + 1], imdata[i + 2])
+            if (rmax < imdata[i]) {
+                rmax = imdata[i]
+            }
+
+            if (gmax < imdata[i + 1]) {
+                gmax = imdata[i + 1]
+            }
+
+            if (bmax < imdata[i + 2]) {
+                bmax = imdata[i + 2]
+            }
+
+        }
+        return { 'rNumber': rNumber, 'rmax': rmax, 'gNumber': gNumber, 'gmax': gmax, 'bNumber': bNumber, 'bmax': bmax }
+
+    }
+    var img = new Image()
+
+    img.onload = function () {
+
+        var canvas = document.createElement('canvas');
+        canvas.width = 256
+        canvas.height = 256
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(this, 0, 0)
+        var imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+        pxData = imgData.data; //获取每一个像素
+        // console.log("imgData", pxData);
+        HistogramEqualization(pxData, ctx.canvas.width, ctx.canvas.height)
+    }
+    img.src = 'ln.BMP'
+
+</script>
+
+</html>

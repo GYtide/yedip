@@ -15,8 +15,8 @@
 
         <div class="wrapper">
             <div class="tool item">
-                <button onclick="importImage()">导入图片</button>
-                <button onclick="importlnImage()">示例图片(莱娜图)</button>
+                <button  class="toolbtn" onclick="importImage()">导入图片</button>
+                <button  class="toolbtn" onclick="importlnImage()">示例(莱娜图)</button>
                 <!-- <button onclick="flagFn(this,'pencil')">铅笔</button>
                 <button onclick="flagFn(this, 'rectH');">矩形框</button>
                 <button onclick="flagFn(this, 'ellipse');">椭圆-空心</button>
@@ -26,11 +26,13 @@
                     <option value="blue">蓝色</option>
                     <option value="green">绿色</option>
                 </select> -->
-                <button onclick="removeFn();">清空画板</button>
+                <button  class="toolbtn" onclick="removeFn();">清空画板</button>
             </div>
-            <div class="sketchpad item" id="container">
-                <!-- <div id="container"></div> -->
+            <div class="sketchpad item ">
+                <div id="container"></div>
+
             </div>
+            <!-- <div id="container"></div> -->
             <div class="attr-list item">
 
                 <input type="radio" id="hotRank" name="radio" checked />
@@ -71,54 +73,148 @@
                                 <button class="attrbtn" onclick="rgb2gray()">加权灰度化</button>
                                 <button class="attrbtn" onclick="rgb2gray('mean')">平均灰度化</button>
                                 <button class="attrbtn" onclick="return2src()">还原为原图</button>
-                                <button class="attrbtn">均衡直方图</button>
+                                <button class="attrbtn" onclick="Equalization()">均衡直方图</button>
                             </li>
                             <li class="contentIndex">
-                                <label class="attrchoice">是否使用 Transformer :</label>
+                                <label class="attrchoice">使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
                                     onclick="transformerOclick(this)" value="" class="attrinfo">
                             </li>
 
                         </ul>
                     </div>
-
                     <div id="content2">
-                        <ul>
-                            <li>
-                                <label class="contentIndex">01</label>
-                                <label class="textContent">习近平告诉你我们的制度为什么好...</label>
-                                <label class="readTimes">999999</label>
-                            </li>
-                            <li>
-                                <label class="contentIndex">02</label>
-                                <label class="textContent">习近平告诉你我们的制度为什么好.....</label>
-                                <label class="readTimes">999999</label>
-                            </li>
-                        </ul>
+                       <div style= "padding: 20px;" >
+                        <li class="table-cell">
+                            文件名：
+                        </li>
+                        <li class="table-cell">
+                            <input type="text" disabled id="fname">
+                        </li>
+                       </div>
+                        
+                        位图文件头
+                        <div class="table" id="table">
+                            <div class="table-row-group">
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        文件类型
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="bfType">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        文件大小
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="bfSize">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        位图数据
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="bfOffBits">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        位图信息头
+                        <div class="table" id="table">
+                            <div class="table-row-group">
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        信息头大小
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="biSize">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        图像宽度
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="biWidth">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        图像高度
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="biHeight">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        位面数
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="biPlanes">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        像素位数
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="biBitCount">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        是否压缩
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="biCompression">
+                                    </li>
+                                </ul>
+                                <ul class="table-row">
+                                    <li class="table-cell">
+                                        颜色数
+                                    </li>
+                                    <li class="table-cell">
+                                        <input type="text" disabled id="biClrUsed">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
+
             <div class="histogram item">
+                <div class="echart-rgb-box" id="rchart"></div>
+                <div class="echart-rgb-box" id="gchart"></div>
+                <div class="echart-rgb-box" id="bchart"></div>
+                <!-- <div class="" id="rchart"></div>
+                <div class="" id="gchart"></div>
+                <div class="" id="bchart"></div> -->
+                <div class="echart-gray-box" id="graychart"></div>
 
             </div>
-            <!-- <div class="five item">Five</div> -->
+            <!-- <div class="controlPanel item"></div> -->
             <!-- <div class="six item">Six</div> -->
+
         </div>
-    </div>
 </body>
 <script src="../lib/konva/konva.js"></script>
 <script src="../src/store/konvaindex.js"></script>
 <script src="./store/attrList.js"></script>
 <script src="./store/store.js"></script>
+<script src="../lib/echarts/echarts.min.js"></script>
 <script>
     // import * as fs from 'fs';
     // 文件读取模块
     const fs = require('fs')
     const path = require('path')
-    const { FileParser } = require('E:/_todo/dip_expe/yedip/src/store/Fileloader.js')
+    const { FileParser } = require(path.join(path.resolve(__dirname), 'store', 'Fileloader.js'))
 
-    let draw = [], // 绘制的图形数组
+    let drawShape = [], // 绘制的图形数组
         graphNow = null, // 当前图形
         flag = null, // 激活绘制-铅笔 pencil:铅笔 ellipse:椭圆 rect:矩形 rectH:矩形-空心
         drawing = false, // 绘制中
@@ -143,10 +239,6 @@
 
     var bmpx = document.getElementById('bmpx')
     var bmpy = document.getElementById('bmpy')
-
-
-
-
     function importImage() {
         let input = document.createElement('input');
         input.type = 'file';
@@ -170,19 +262,10 @@
         imageObj.onload = function () {
             drawImage(this)
         }
-        imageObj.src = '../res/ln.BMP'
+        imageObj.src = path.join(path.resolve(__dirname,'..'),'res','ln.BMP')
 
-        // console.log(imageObj.src)
-        try {
-            //读取文件
-            var rbuf = fs.readFileSync('res/ln.BMP');
-            // console.log(rbuf);
-        } catch (err) {
-            console.log(err);
-        }
-        var fileloader = new FileParser(rbuf)
 
-        // console.log(fileloader.bmpFile.BITMAPINFO)
+        // 
     }
 
     // 选择颜色
@@ -217,6 +300,10 @@
         bmpy.value = ""
         // console.log(aShape)
         // console.log('========================')
+
+        // 清空直方图
+        graphNow = null
+        clearHistogram()
 
     }
 
@@ -261,6 +348,7 @@
             bmpx.value = ""
             bmpy.value = ""
             graphNow = null
+            clearHistogram()
 
             layer.draw();
             return;
@@ -294,6 +382,28 @@
 
         bmpx.value = graphNow.attrs.x
         bmpy.value = graphNow.attrs.y
+
+        // 创建该图形的直方图
+
+        clearHistogram()
+        let cans = graphNow.getImage().getContext('2d')
+
+        let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+        let imdata = catx.data
+        let hisdata = histogramData(imdata)
+
+        if (graphNow.type == 'rgb') {
+
+            // console.log(hisdata)
+            drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
+            drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
+            drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
+        }
+        else {
+            // 画出灰度直方图
+            drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+        }
 
 
 
@@ -349,6 +459,7 @@
 
 
     }
+    
 
     // 监控 checkbox 事件,如果转为不使用 transformer 状态，清除现有的 transformer 框
     function transformerOclick(checkbox) {
@@ -376,6 +487,7 @@
 
     }
 
+   
 </script>
 
 </html>

@@ -3,6 +3,7 @@
 
 <head>
   <script src="../../lib/konva/konva.js"></script>
+  <script src="../../lib/echarts/echarts.min.js"></script>
   <meta charset="utf-8" />
   <title>Konva Native Context Demo</title>
   <style>
@@ -12,11 +13,56 @@
       overflow: hidden;
       background-color: #f0f0f0;
     }
+
+    h1 {
+      text-align: center;
+    }
+
+    p {
+      float: right;
+    }
+
+    #myCanvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .container {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    @media screen and (min-width:300px) {
+      .echart-box {
+        width: 100%;
+        height: 500px;
+      }
+    }
+
+    @media screen and (min-width:768px) {
+      .echart-box {
+        width: 45%;
+        height: 500px;
+      }
+    }
+
+    @media screen and (min-width:1024px) {
+      .echart-box {
+        width: 30%;
+        height: 300px;
+      }
+    }
   </style>
 </head>
 
 <body>
   <div id="container"></div>
+  <div class="container">
+    <div class="echart-box" id="rchart" ></div>
+    <div class="echart-box" id="gchart" style="display: inline;"></div>
+    <div class="echart-box" id="bchart"></div>
+  </div>
   <br>
   <script>
     var width = window.innerWidth;
@@ -24,8 +70,8 @@
 
     var stage = new Konva.Stage({
       container: 'container',
-      width: width,
-      height: height,
+      width: 800,
+      height: 300,
     });
 
     var layer = new Konva.Layer();
@@ -33,38 +79,114 @@
 
     // if you want to make something with native 2d canvas
     //we can create it and use it for Konva.Image
+    var img = new Image()
 
-    var canvas = document.createElement('canvas');
-    canvas.width = 300
-    canvas.height = 300
-    var ctx = canvas.getContext('2d');
+    img.onload = function () {
+      draw(this)
+    }
 
-    var image = new Konva.Image({
-      image: canvas,
-      draggable: true,
-    });
+    img.src = 'ln.BMP'
 
-    image.on('mouseover', function () {
-      // console.log(this.getImage())
+    function draw(imageObj) {
+      var canvas = document.createElement('canvas');
+      canvas.width = 300
+      canvas.height = 300
+      var ctx = canvas.getContext('2d');
+      ctx.drawImage(imageObj, 0, 0)
+      var image = new Konva.Image({
+        image: canvas,
+        draggable: true,
+      });
 
-      var ctx = this.getImage().getContext('2d')
-      console.log(ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height))
+      image.on('mouseover', function () {
+        // console.log(this.getImage())
 
+        var ctx = this.getImage().getContext('2d')
+        // console.log(ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height))
 
-    })
-    layer.add(image);
+      })
+      layer.add(image);
+      var img = new Image(); //定义图像对象
+      var pxData = null; //定义存储像素的数组
+      var rNumber = new Array(256).fill(0); //定义每一个像素点中R通道值的出现次数
+      var gNumber = new Array(256).fill(0); //定义每一个像素点中R通道值的出现次数
+      var bNumber = new Array(256).fill(0); //定义每一个像素点中R通道值的出现次数
 
-    // make manual drawings
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(5, 5, canvas.width - 10, canvas.height / 2);
-    ctx.fillStyle = 'red';
-    ctx.beginPath();
-    ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-    ctx.fill();
+      
+      
+      var imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+      pxData = imgData.data; //获取每一个像素
+      console.log("imgData", pxData);
+      
+      // 统计每一个像素点的RGB三通道
+      rNumber = new Array(256).fill(0);
+      gNumber = new Array(256).fill(0);
+      bNumber = new Array(256).fill(0);
 
-    // such as canvas is updated we need to redraw the layer
+     var rrangeNum = 256
+     var grangeNum = 256
+     var brangeNum = 256
+     
+      
+      for (let i = 0; i < pxData.length; i += 4) {
+        rNumber[pxData[i]]++;
+        gNumber[pxData[i + 1]]++;
+        bNumber[pxData[i + 2]]++;
+        // console.log(pxData[i],pxData[i+1],pxData[i+2])
+        // if(rrangeNum < pxData[i]){
+        //   rrangeNum = pxData[i]
+        //   console.log(rrangeNum)
+        // }
+        // if(grangeNum<pxData[i+1]){
+        //   rrangeNum = pxData[i+1]
+        // }
+        // if(brangeNum<pxData[i+2]){
+        //   rrangeNum = pxData[i+2]
+        // }
+      }
+      // var rrangeNum = Math.max.apply(null,rNumber);//显示直方图的频段
+      // var rrangeNum = Math.max.apply(null,gNumber);//显示直方图的频段
+      // var rrangeNum = Math.max.apply(null,bNumber);//显示直方图的频段
+      console.log("rNumber:", rNumber);
+      console.log("gNumber:", gNumber);
+      console.log("bNumber:", bNumber);
+      display("rchart", rNumber, "红色直方图分布", ['#ff0000'],rrangeNum);
+      display("gchart", gNumber, "绿色直方图分布", ['#00ff00'],grangeNum);
+      display("bchart", bNumber, "蓝色直方图分布", ['#0000ff'],brangeNum);
 
-    layer.batchDraw();
+      function display(id, data, title, color,rangeNum) {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById(id));
+        let ranges = new Array(rangeNum).fill(0), displayData = new Array(rangeNum).fill(0);
+        let delt = Math.ceil(256 / rangeNum);
+        for (let i = 0; i < rangeNum; i++) {
+          ranges[i] = i;
+          for (let j = 0; j < delt; j++) {
+            displayData[i] += data[i * delt + j];
+          }
+        }
+        // console.log(ranges);
+        myChart.setOption({
+          title: {
+            text: title,
+          },
+          tooltip: {},//悬浮显示
+          xAxis: {
+            data: ranges
+          },
+          yAxis: {
+            type: "value",//y轴显示区间分量的个数
+          },
+          series: [{
+            name: '个数',
+            type: 'bar',
+            color: color,
+            data: displayData
+          }]
+        }, rangeNum);
+      }
+
+    }
   </script>
 </body>
 

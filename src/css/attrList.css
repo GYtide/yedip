@@ -2,6 +2,39 @@
 ul,li{
     list-style: none;
 }
+.table {
+    /*元素作为块级表格来显示（类似 <table>），表格前后带有换行符。*/
+    display: table;
+    border-collapse: collapse;
+    /*border-collapse: separate;*/
+    border: 1px solid #ccc;
+    margin: 20px;
+    /* background: rgba(72, 58, 228); */
+    width: 300px;
+    /* height: 80; */
+    font-size: 14px;
+}
+
+.table-row-group {
+    display: table-row-group;
+    width: auto;
+    height: auto;
+}
+
+.table-row {
+    margin: 0 auto;
+    display: table-row;
+}
+
+.table-cell {
+
+    display: table-cell;
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+    height: 20px;
+    width: 90px;
+}
 
 label {
     display: inline-block;
@@ -38,7 +71,7 @@ input[type="radio"]:checked+label+div {
 
 .contentIndex {
     float: left;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     color:rgb(19, 44, 120);
 }
 
@@ -47,7 +80,7 @@ input[type="radio"]:checked+label+div {
 }
 
 .attrchoice {
-    width: 180px;
+    width: 160px;
 }
 
 .index {
@@ -55,13 +88,13 @@ input[type="radio"]:checked+label+div {
 }
         
 .content {
- 
+    
     background-color: aliceblue;
 }
         
-.content div {
+/* .content div {
     display: none;
-}
+} */
 
 .attrinfo {
     width: 70px;
@@ -70,13 +103,24 @@ input[type="radio"]:checked+label+div {
 
 .attrbtn {
     width: 90px;
+    height: 30px;
+    /* width: 90px; */
     /* margin: auto; */
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 10px;
 }
+.toolbtn {
+    width: 100px;
+    height: 30px;
+    /* width: 90px; */
+    /* margin: auto; */
+    /* margin-left: 20px; */
+    /* margin-right: 20px; */
+    margin-top: 10px;
+}
 
-#hotRank:checked~.content>#content1,
-#commentRank:checked~.content>#content2{
-    display: block;
+#hotRank:checked~.content>#content2,
+#commentRank:checked~.content>#content1{
+    display: none;
 }

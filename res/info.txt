@@ -1,0 +1,21 @@
+Dip {
+  BITMAPFILEHEADER: BITMAPFILEHEADER {
+    bfType: <Buffer 42 4d>,
+    bfSize: 66614,
+    bfReserved1: <Buffer 00 00>,
+    bfReserved2: <Buffer 00 00>,
+    bfOffBits: 1078
+  },
+  BITMAPINFO: BITMAPINFO {
+    biSize: 40,
+    biWidth: 256,
+    biHeight: 256,
+    biPlanes: 1,
+    biBitCount: 8,
+    biCompression: 'noCompress',
+    biSizeImage: 0,
+    biXPelsPerMeter: 0,
+    biYPelsPerMeter: 0,
+    biClrUsed: 256,
+    biClrImportant: 256
+  },
