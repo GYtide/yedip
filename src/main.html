@@ -15,8 +15,8 @@
 
         <div class="wrapper">
             <div class="tool item">
-                <button  class="toolbtn" onclick="importImage()">导入图片</button>
-                <button  class="toolbtn" onclick="importlnImage()">示例(莱娜图)</button>
+                <button class="toolbtn" onclick="importImage()">导入图片</button>
+                <button class="toolbtn" onclick="importlnImage()">示例(莱娜图)</button>
                 <!-- <button onclick="flagFn(this,'pencil')">铅笔</button>
                 <button onclick="flagFn(this, 'rectH');">矩形框</button>
                 <button onclick="flagFn(this, 'ellipse');">椭圆-空心</button>
@@ -26,7 +26,7 @@
                     <option value="blue">蓝色</option>
                     <option value="green">绿色</option>
                 </select> -->
-                <button  class="toolbtn" onclick="removeFn();">清空画板</button>
+                <button class="toolbtn" onclick="removeFn();">清空画板</button>
             </div>
             <div class="sketchpad item ">
                 <div id="container"></div>
@@ -106,24 +106,24 @@
                             <li class="contentIndex">
                                 <label class="attrchoice">使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
-                                    onclick="transformerOclick(this)" value="" class="attrinfo">
-                                    <div style="font-size: 10px;">
-                                         注：绘图框架的 transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
-                                    </div>
+                                    onclick="transformerOclick(this)" value="" class="attrinfo" checked="checked">
+                                <div style="font-size: 10px;">
+                                    注：绘图框架的 transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
+                                </div>
                             </li>
 
                         </ul>
                     </div>
                     <div id="content2">
-                       <div style= "padding: 20px;" >
-                        <li class="table-cell">
-                            文件名：
-                        </li>
-                        <li class="table-cell">
-                            <input type="text" disabled id="fname">
-                        </li>
-                       </div>
-                        
+                        <div style="padding: 20px;">
+                            <li class="table-cell">
+                                文件名：
+                            </li>
+                            <li class="table-cell">
+                                <input type="text" disabled id="fname">
+                            </li>
+                        </div>
+
                         位图文件头
                         <div class="table" id="fileheader">
                             <div class="table-row-group">
@@ -275,13 +275,27 @@
         input.type = 'file';
         input.onchange = _this => {
             let file = Array.from(input.files)[0];
-            // console.log(file);
-            if (!file.type.includes('image')) {
-                alert('只能插入图片');
-
+            console.log(file);
+            if (!file.type.includes('image/bmp')) {
+                alert('只能导入 BMP 位图');
                 return;
             }
             else {
+               
+                var imageObj = new Image();
+                imageObj.onload = function () {
+                    drawImage(this)
+                }
+                try {
+                    //读取文件
+
+                    imageObj.src =  file.path
+                } catch (err) {
+                    console.log(err);
+                    alert("文件读取失败")
+                    return
+                }
+
 
             }
         };
@@ -293,9 +307,15 @@
         imageObj.onload = function () {
             drawImage(this)
         }
-        imageObj.src = path.join(path.resolve(__dirname,'..'),'res','ln.BMP')
+        try {
+            //读取文件
 
-
+            imageObj.src = path.join(path.resolve(__dirname, '..'), 'res', 'ln.BMP')
+        } catch (err) {
+            console.log(err);
+            alert("文件读取失败")
+            return
+        }
         // 
     }
 
@@ -425,6 +445,7 @@
         let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
 
         let imdata = catx.data
+
         let hisdata = histogramData(imdata)
 
         if (graphNow.type == 'rgb') {
@@ -493,7 +514,7 @@
 
 
     }
-    
+
 
     // 监控 checkbox 事件,如果转为不使用 transformer 状态，清除现有的 transformer 框
     function transformerOclick(checkbox) {
@@ -521,7 +542,7 @@
 
     }
 
-   
+
 </script>
 
 </html>

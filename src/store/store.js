@@ -107,7 +107,7 @@ function HistogramEqualization(imdata) {
     }
 
     // 归一化
-
+    
     for (let i = 0; i < 256; ++i) {
         cumuhist[i] = cumuhist[i] / (imdata.length / 4)
     }
@@ -234,10 +234,12 @@ function Pretzelnoise(imdata, type) {
 /**
  * 均值滤波
  * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
  */
 function Meanvaluefilter(imdata, width, height) {
-    for (let j = 1; j < height; ++j) {
-        for (let i = 1; i < width; ++i) {
+    for (let j = 1; j < height-1; ++j) {
+        for (let i = 1; i < width-1; ++i) {
             averg = 0;
             //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
             averg = Math.round(imdata[(j - 1) * width + (i - 1)] + imdata[(j - 1) * width + i]
@@ -247,7 +249,6 @@ function Meanvaluefilter(imdata, width, height) {
             imdata[j * width + i] = averg;
         }
     }
-    console.log(imdata)
     return true;
 
 }
@@ -255,6 +256,8 @@ function Meanvaluefilter(imdata, width, height) {
 /**
  * 中值滤波
  * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
  */
 function Medianvaluefilter(imdata, width, height) {
 
@@ -273,20 +276,108 @@ function Medianvaluefilter(imdata, width, height) {
         }
     }
 
-    for (let j = 1; j < height; ++j) {
-        for (let i = 1; i < width; ++i) {
+    for (let j = 1; j < height-1; ++j) {
+        for (let i = 1; i < width-1; ++i) {
             averg = 0;
             //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
 
             arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
             imdata[(j - 1) * width + (i + 1)], imdata[j * width + (i - 1)]
-                , imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
+                , imdata[j * width + i], imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
                 , imdata[(j + 1) * width + i], imdata[(j + 1) * width + i + 1]]
             sort(arr)
             medv = arr[4]
             imdata[j * width + i] = medv;
         }
     }
-    console.log(imdata)
+    return true;
+}
+
+/**
+ * 水平一阶锐化后生成水平浮雕
+ * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ * 
+ * 使用以下横向模板 
+ * 
+ *     1  2  1
+ *     0  0  0
+ *    -1 -2 -1
+ * 
+ * 之后加一正整数,生成类似浮雕效果
+ */
+
+function Horizontalsharpe(imdata, width, height) {
+    
+    var tmpimdata = []
+    // 复刻一个数组
+    for(let i = 0 ; i < imdata.length ;++i){
+        tmpimdata[i] = imdata[i]
+    }
+
+
+    // 排序函数
+    function sort(arr) {
+        for (var j = 0; j < arr.length - 1; j++) {
+            for (var i = 0; i < arr.length - 1; i++) {
+                // 如果前一个数 大于 后一个数 就交换两数位置
+                if (arr[i] > arr[i + 1]) {
+                    var temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                }
+            }
+        }
+    }
+
+    for (let j = 1; j < height-1; ++j) {
+        for (let i = 1; i < width-1; ++i) {
+            averg = 0;
+            // 进行锐化
+            newdata = tmpimdata[(j - 1) * width + (i - 1)]*1 + tmpimdata[(j - 1) * width + i]*2 +
+            tmpimdata[(j - 1) * width + (i + 1)]*1 + tmpimdata[j * width + (i - 1)]*0
+                + tmpimdata[j * width + i]*0 + tmpimdata[j * width + i + 1]*0 + tmpimdata[(j + 1) * width + (i - 1)]*(-1)
+                + tmpimdata[(j + 1) * width + i]*(-2) + tmpimdata[(j + 1) * width + i + 1]*(-1)
+            
+            imdata[j * width + i] = newdata;
+
+            // console.log(newdata)s
+        }
+    }
+
+    // 锐化后处理，添加范围内最小数的绝对值
+
+    for (let j = 1; j < height; j+=3) {
+        for (let i = 1; i < width; i+=3) {
+            averg = 0;
+            // 进行锐化
+            arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
+            imdata[(j - 1) * width + (i + 1)], imdata[j * width + (i - 1)]
+                , imdata[j * width + i], imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
+                , imdata[(j + 1) * width + i], imdata[(j + 1) * width + i + 1]]
+            sort(arr)
+            let mix
+
+            if(arr[0]<0){
+
+                mix = arr[0]
+                console.log(mix)
+                imdata[(j - 1) * width + (i - 1)]-=2*mix
+                imdata[(j - 1) * width + i]-=2*mix
+                imdata[(j - 1) * width + (i + 1)]-=2*mix 
+                imdata[j * width + (i - 1)]-=2*mix
+                imdata[j * width + i]-=2*mix 
+                imdata[j * width + i + 1]-=2*mix 
+                imdata[(j + 1) * width + (i - 1)]-=2*mix
+                imdata[(j + 1) * width + i]-=2*mix 
+                imdata[(j + 1) * width + i + 1]-=2*mix
+
+            }
+
+        }
+    }
+
+
     return true;
 }
