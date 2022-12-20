@@ -2,13 +2,14 @@
   "name": "yedip",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "commonjs",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "packager": "electron-packager ./ testapp --win --out ./outputs"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,8 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "electron": "^22.0.0",
+    "electron-packager": "^17.1.1",
     "electron-reloader": "^1.2.3"
   }
 }

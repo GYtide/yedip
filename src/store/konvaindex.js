@@ -34,7 +34,8 @@ function drawImage(imageObj) {
 
     graphNow = Img
     // console.log(Img._id)
-    
+
+
     // 存放源文件属性
     drawShape[Img._id] = {
         'src': srcstring,
@@ -89,6 +90,27 @@ function drawImage(imageObj) {
         document.body.style.cursor = 'default';
     });
     layer.add(Img);
+
+    let trans = stage.find('Transformer')
+
+    for (let i = 0; i < trans.length; ++i) {
+
+        trans[i].destroy()
+    }
+
+    
+    // 添加 tansformer
+    if (transformer.checked) {
+        const tr = new Konva.Transformer({
+            borderStroke: '#000', // 虚线颜色
+            borderStrokeWidth: 1, //虚线大小
+            borderDash: [5], // 虚线间距
+            keepRatio: false // 不等比缩放
+        });
+        layer.add(tr);
+        tr.attachTo(Img);
+
+    }
 
     layer.draw();
     Img.on('dblclick', function () {
@@ -401,6 +423,7 @@ function addGaussiannoise(){
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
 
             let imdata = catx.data
+            console.log(typeof imdata)
             // 添加噪声
             Gaussiannoise(imdata,'gray')
 
@@ -662,10 +685,3 @@ function Medianvaluefiltering(){
     }
 }
 
-/**
- * 水平一阶锐化  Horizontalsharpening
- */
-
-function Horizontalsharpening(){
-    
-}

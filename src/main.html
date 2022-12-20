@@ -16,7 +16,8 @@
         <div class="wrapper">
             <div class="tool item">
                 <button class="toolbtn" onclick="importImage()">导入图片</button>
-                <button class="toolbtn" onclick="importlnImage()">示例(莱娜图)</button>
+                <button class="toolbtn" onclick="importlnImage('ln.BMP')">示例(莱娜图)</button>
+                <button class="toolbtn" onclick="importlnImage('chinamap.BMP')">示例(地图)</button>
                 <!-- <button onclick="flagFn(this,'pencil')">铅笔</button>
                 <button onclick="flagFn(this, 'rectH');">矩形框</button>
                 <button onclick="flagFn(this, 'ellipse');">椭圆-空心</button>
@@ -87,7 +88,9 @@
                                 <label class="">锐化和边缘检测</label>
                                 <br>
                                 <button class="attrbtn" onclick="Horizontalsharpening()">水平一阶锐化</button>
+                                <button class="attrbtn" onclick="Verticalsharpening()">垂直一阶锐化</button>
                                 <button class="attrbtn" onclick="rgb2gray('mean')">二阶微分锐化</button>
+                                <button class="attrbtn" onclick="Horizontalenchasing()">水平浮雕</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">分割测量</label>
@@ -302,7 +305,7 @@
         input.click();
 
     }
-    function importlnImage() {
+    function importlnImage(imagename) {
         var imageObj = new Image();
         imageObj.onload = function () {
             drawImage(this)
@@ -310,7 +313,7 @@
         try {
             //读取文件
 
-            imageObj.src = path.join(path.resolve(__dirname, '..'), 'res', 'ln.BMP')
+            imageObj.src = path.join(path.resolve(__dirname, '..'), 'res', imagename)
         } catch (err) {
             console.log(err);
             alert("文件读取失败")
@@ -426,26 +429,28 @@
         // 当前点击的对象赋值给graphNow
         graphNow = e.target;
 
-        console.log(graphNow)
-
+        
         // console.log(catx)
-
+        
         bmpid.value = graphNow._id
         bmpindex.value = graphNow.index
-
+        
         bmpx.value = graphNow.attrs.x
         bmpy.value = graphNow.attrs.y
-
+        
         // 创建该图形的直方图
         updateImageinfoPan()
-
+        
         clearHistogram()
         let cans = graphNow.getImage().getContext('2d')
-
+        
         let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
-
+        
         let imdata = catx.data
-
+        console.log(imdata)
+        console.log(cans.canvas.width)
+        console.log(cans.canvas.height)
+        
         let hisdata = histogramData(imdata)
 
         if (graphNow.type == 'rgb') {

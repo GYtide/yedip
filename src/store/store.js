@@ -107,7 +107,7 @@ function HistogramEqualization(imdata) {
     }
 
     // 归一化
-    
+
     for (let i = 0; i < 256; ++i) {
         cumuhist[i] = cumuhist[i] / (imdata.length / 4)
     }
@@ -115,7 +115,7 @@ function HistogramEqualization(imdata) {
     // 均衡化  imdata 的灰度值替换为 其累积分布 * 255
 
     for (let i = 0; i < imdata.length; i = i + 4) {
-        imdata[i] = Math.round(cumuhist[imdata[i]] * 255)
+        imdata[i] = imdata[i + 1] = imdata[i + 2] = Math.round(cumuhist[imdata[i]] * 255)
     }
 }
 
@@ -238,8 +238,8 @@ function Pretzelnoise(imdata, type) {
  * @param height 图像高度
  */
 function Meanvaluefilter(imdata, width, height) {
-    for (let j = 1; j < height-1; ++j) {
-        for (let i = 1; i < width-1; ++i) {
+    for (let j = 1; j < height - 1; ++j) {
+        for (let i = 1; i < width - 1; ++i) {
             averg = 0;
             //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
             averg = Math.round(imdata[(j - 1) * width + (i - 1)] + imdata[(j - 1) * width + i]
@@ -276,8 +276,8 @@ function Medianvaluefilter(imdata, width, height) {
         }
     }
 
-    for (let j = 1; j < height-1; ++j) {
-        for (let i = 1; i < width-1; ++i) {
+    for (let j = 1; j < height - 1; ++j) {
+        for (let i = 1; i < width - 1; ++i) {
             averg = 0;
             //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
 
@@ -294,7 +294,7 @@ function Medianvaluefilter(imdata, width, height) {
 }
 
 /**
- * 水平一阶锐化后生成水平浮雕
+ * 水平一阶锐化
  * @param imdata 原始像素数组
  * @param width 图像宽度
  * @param height 图像高度
@@ -305,14 +305,14 @@ function Medianvaluefilter(imdata, width, height) {
  *     0  0  0
  *    -1 -2 -1
  * 
- * 之后加一正整数,生成类似浮雕效果
+ * 之后加一正整数
  */
 
 function Horizontalsharpe(imdata, width, height) {
-    
+
     var tmpimdata = []
     // 复刻一个数组
-    for(let i = 0 ; i < imdata.length ;++i){
+    for (let i = 0; i < imdata.length; ++i) {
         tmpimdata[i] = imdata[i]
     }
 
@@ -331,15 +331,15 @@ function Horizontalsharpe(imdata, width, height) {
         }
     }
 
-    for (let j = 1; j < height-1; ++j) {
-        for (let i = 1; i < width-1; ++i) {
+    for (let j = 1; j < height - 1; ++j) {
+        for (let i = 1; i < width - 1; ++i) {
             averg = 0;
             // 进行锐化
-            newdata = tmpimdata[(j - 1) * width + (i - 1)]*1 + tmpimdata[(j - 1) * width + i]*2 +
-            tmpimdata[(j - 1) * width + (i + 1)]*1 + tmpimdata[j * width + (i - 1)]*0
-                + tmpimdata[j * width + i]*0 + tmpimdata[j * width + i + 1]*0 + tmpimdata[(j + 1) * width + (i - 1)]*(-1)
-                + tmpimdata[(j + 1) * width + i]*(-2) + tmpimdata[(j + 1) * width + i + 1]*(-1)
-            
+            newdata = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 2 +
+                tmpimdata[(j - 1) * width + (i + 1)] * 1 + tmpimdata[j * width + (i - 1)] * 0
+                + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * 0 + tmpimdata[(j + 1) * width + (i - 1)] * (-1)
+                + tmpimdata[(j + 1) * width + i] * (-2) + tmpimdata[(j + 1) * width + i + 1] * (-1)
+
             imdata[j * width + i] = newdata;
 
             // console.log(newdata)s
@@ -348,8 +348,8 @@ function Horizontalsharpe(imdata, width, height) {
 
     // 锐化后处理，添加范围内最小数的绝对值
 
-    for (let j = 1; j < height; j+=3) {
-        for (let i = 1; i < width; i+=3) {
+    for (let j = 1; j < height; j += 3) {
+        for (let i = 1; i < width; i += 3) {
             averg = 0;
             // 进行锐化
             arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
@@ -359,19 +359,23 @@ function Horizontalsharpe(imdata, width, height) {
             sort(arr)
             let mix
 
-            if(arr[0]<0){
+            for (let col = - 1; col < 2; ++col) {
+                for (let row = -1; row < 2; ++row) {
+                    imdata
+                }
+            }
 
+            if (arr[0] < 0) {
                 mix = arr[0]
-                console.log(mix)
-                imdata[(j - 1) * width + (i - 1)]-=2*mix
-                imdata[(j - 1) * width + i]-=2*mix
-                imdata[(j - 1) * width + (i + 1)]-=2*mix 
-                imdata[j * width + (i - 1)]-=2*mix
-                imdata[j * width + i]-=2*mix 
-                imdata[j * width + i + 1]-=2*mix 
-                imdata[(j + 1) * width + (i - 1)]-=2*mix
-                imdata[(j + 1) * width + i]-=2*mix 
-                imdata[(j + 1) * width + i + 1]-=2*mix
+                imdata[(j - 1) * width + (i - 1)] -= 2 * mix
+                imdata[(j - 1) * width + i] -= 2 * mix
+                imdata[(j - 1) * width + (i + 1)] -= 2 * mix
+                imdata[j * width + (i - 1)] -= 2 * mix
+                imdata[j * width + i] -= 2 * mix
+                imdata[j * width + i + 1] -= 2 * mix
+                imdata[(j + 1) * width + (i - 1)] -= 2 * mix
+                imdata[(j + 1) * width + i] -= 2 * mix
+                imdata[(j + 1) * width + i + 1] -= 2 * mix
 
             }
 
@@ -380,4 +384,126 @@ function Horizontalsharpe(imdata, width, height) {
 
 
     return true;
+}
+
+/**
+ * 垂直一阶锐化
+ * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ * 
+ * 使用以下横向模板 
+ * 
+ *     1  0 -1
+ *     2  0 -2
+ *     1  0 -1
+ * 
+ * 之后加一正整数
+ */
+
+
+function Verticalsharpe(imdata, width, height) {
+    var tmpimdata = []
+    // 复刻一个数组
+    for (let i = 0; i < imdata.length; ++i) {
+        tmpimdata[i] = imdata[i]
+    }
+
+
+    // 排序函数
+    function sort(arr) {
+        for (var j = 0; j < arr.length - 1; j++) {
+            for (var i = 0; i < arr.length - 1; i++) {
+                // 如果前一个数 大于 后一个数 就交换两数位置
+                if (arr[i] > arr[i + 1]) {
+                    var temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                }
+            }
+        }
+    }
+
+    for (let j = 1; j < height - 1; ++j) {
+        for (let i = 1; i < width - 1; ++i) {
+            averg = 0;
+            // 进行锐化
+            newdata = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 0 +
+                tmpimdata[(j - 1) * width + (i + 1)] * (-1) + tmpimdata[j * width + (i - 1)] * 2
+                + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * (-2) + tmpimdata[(j + 1) * width + (i - 1)] * 1
+                + tmpimdata[(j + 1) * width + i] * 0 + tmpimdata[(j + 1) * width + i + 1] * (-1)
+
+            imdata[j * width + i] = newdata;
+
+            // console.log(newdata)s
+        }
+    }
+
+    // 锐化后处理，添加范围内最小数的绝对值
+
+    for (let j = 1; j < height; j += 3) {
+        for (let i = 1; i < width; i += 3) {
+            averg = 0;
+            // 进行锐化
+            arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
+            imdata[(j - 1) * width + (i + 1)], imdata[j * width + (i - 1)]
+                , imdata[j * width + i], imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
+                , imdata[(j + 1) * width + i], imdata[(j + 1) * width + i + 1]]
+            sort(arr)
+            let mix
+
+            // for(let col = - 1 ; col < 2 ;++col){
+            //     for(let row  = -1 ; row < 2 ; ++row){
+            //             imdata
+            //     }
+            // }
+
+            if (arr[0] < 0) {
+                mix = arr[0]
+                imdata[(j - 1) * width + (i - 1)] -= 2 * mix
+                imdata[(j - 1) * width + i] -= 2 * mix
+                imdata[(j - 1) * width + (i + 1)] -= 2 * mix
+                imdata[j * width + (i - 1)] -= 2 * mix
+                imdata[j * width + i] -= 2 * mix
+                imdata[j * width + i + 1] -= 2 * mix
+                imdata[(j + 1) * width + (i - 1)] -= 2 * mix
+                imdata[(j + 1) * width + i] -= 2 * mix
+                imdata[(j + 1) * width + i + 1] -= 2 * mix
+
+            }
+
+        }
+    }
+
+
+    return true;
+}
+
+
+/**
+ * Horizontalenchase 水平浮雕
+ * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ */
+
+function Horizontalenchase(imdata, width, height) {
+
+    let tmpdata = []
+
+    for (let i = 0; i < imdata.length; ++i) {
+        tmpdata[i] = imdata[i]
+    }
+
+
+    // G(i,j) = f(i,j) - f(i-1,j) + M
+
+    for (let j = 0; j < height; ++j) {
+        for (let i = 1; i < width; ++i) {
+            
+            imdata[j * height + i] =  tmpdata[j * height + i] - tmpdata[j * height + i - 1] +128
+        }
+    }
+
+
 }
