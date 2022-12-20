@@ -150,7 +150,7 @@ const { Dip, BITMAPFILEHEADER, BITMAPINFO } = require('./Dip.js')
 
         let biClrImportant = hex2dec(biClrImportantStream,4)
 
-        var infoheader = new BITMAPINFO(biSize, biWidth, biWidth, biPlanes, biBitCount,biCompression,biSizeImage,
+        var infoheader = new BITMAPINFO(biSize, biWidth, biHeight, biPlanes, biBitCount,biCompression,biSizeImage,
             biXPelsPerMeter,biYPelsPerMeter,biClrUsed,biClrImportant)
 
         return infoheader

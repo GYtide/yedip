@@ -19,6 +19,7 @@ function drawImage(imageObj) {
     var canvas = document.createElement('canvas');
     canvas.width = imageObj.width
     canvas.height = imageObj.height
+    console.log( canvas.width,canvas.height)
     var ctx = canvas.getContext('2d');
     ctx.drawImage(imageObj, 0, 0)
 

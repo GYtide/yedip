@@ -89,7 +89,7 @@
                                 <br>
                                 <button class="attrbtn" onclick="Horizontalsharpening()">水平一阶锐化</button>
                                 <button class="attrbtn" onclick="Verticalsharpening()">垂直一阶锐化</button>
-                                <button class="attrbtn" onclick="rgb2gray('mean')">二阶微分锐化</button>
+                                <button class="attrbtn" onclick="LOGsharpening()">LOG锐化</button>
                                 <button class="attrbtn" onclick="Horizontalenchasing()">水平浮雕</button>
                             </li>
                             <li class="contentIndex">
@@ -447,6 +447,7 @@
         let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
         
         let imdata = catx.data
+        console.log(graphNow)
         console.log(imdata)
         console.log(cans.canvas.width)
         console.log(cans.canvas.height)
@@ -465,7 +466,9 @@
             drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
         }
 
-
+        // 移到最上面
+        
+        graphNow.moveToTop()
 
         // 如果允许使用 Transformer 创建图形选框事件
         if (!transformer.checked) {
