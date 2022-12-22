@@ -13,15 +13,47 @@ function drawImage(imageObj) {
         alert("文件读取失败")
         return
     }
-    var newFile = new FileParser(rbuf)
+
+    try {
+        var newFileloader = new FileParser(rbuf)
+    }catch (err){
+        console.log(err);
+        alert("文件读取失败,位图数据区大小异常",err)
+        return
+    }
+    
+    var newFile = newFileloader.getFile()
+
+    console.log(newFile)
+
+    var newImage = newFile.getImage()
+
+    // console.log(newImage)
 
     // 为了使用像素进行自定义操作，使用 canvas 作为子容器承载 Image dom
     var canvas = document.createElement('canvas');
-    canvas.width = imageObj.width
-    canvas.height = imageObj.height
-    console.log( canvas.width,canvas.height)
+    canvas.width = newImage.width
+    canvas.height = newImage.height
+    console.log(canvas.width, canvas.height)
     var ctx = canvas.getContext('2d');
-    ctx.drawImage(imageObj, 0, 0)
+    let catx = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
+    let imdata = catx.data
+
+
+    let newdata = newImage.data
+
+    for (let j = 0; j < newImage.height; ++j) {
+
+        for (let i = 0; i < newImage.width; ++i) {
+
+            imdata[(j * newImage.height + i) * 4] = newdata[(j * newImage.height + i) * 4]
+            imdata[(j * newImage.height + i) * 4 + 1] = newdata[(j * newImage.height + i) * 4 + 1]
+            imdata[(j * newImage.height + i) * 4 + 2] = newdata[(j * newImage.height + i) * 4 + 2]
+            imdata[(j * newImage.height + i) * 4 + 3] = newdata[(j * newImage.height + i) * 4 + 3]
+        }
+    }
+
+    ctx.putImageData(catx, 0, 0)
 
     var Img = new Konva.Image({
         name: 'image',
@@ -40,19 +72,18 @@ function drawImage(imageObj) {
     // 存放源文件属性
     drawShape[Img._id] = {
         'src': srcstring,
-        'header': newFile.bmpFile.BITMAPFILEHEADER,
-        'info': newFile.bmpFile.BITMAPINFO,
-        'colorMap': newFile.bmpFile.tagRGBQUAD
+        'header': newFile.BITMAPFILEHEADER,
+        'info': newFile.BITMAPINFO,
+        'colorMap': newFile.tagRGBQUAD
     }
-    
+
     updateImageinfoPan()
     // console.log(drawShape)
 
     // 添加属性 即各种图像处理后的像素矩阵,提前生成，方便替换 canvas 视图
 
     // 添加原图像
-    let catx = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
-    let imdata = catx.data
+
 
     Img.srcImage = imdata
 
@@ -99,7 +130,7 @@ function drawImage(imageObj) {
         trans[i].destroy()
     }
 
-    
+
     // 添加 tansformer
     if (transformer.checked) {
         const tr = new Konva.Transformer({
@@ -370,41 +401,41 @@ function stageMousemove(flag, ev) {
 function updateImageinfoPan() {
 
     const infoTable = {
-        fname : document.getElementById('fname'),
-        bfType : document.getElementById('bfType'),
-        bfSize : document.getElementById('bfSize'),
-        bfOffBits : document.getElementById('bfOffBits'),
-        biSize : document.getElementById('biSize'),
-        biWidth : document.getElementById('biWidth'),
-        biHeight : document.getElementById('biHeight'),
-        biPlanes : document.getElementById('biPlanes'),
-        biBitCount : document.getElementById('biBitCount'),
-        biCompression : document.getElementById('biCompression'),
-        biClrUsed  :document.getElementById('biClrUsed')
+        fname: document.getElementById('fname'),
+        bfType: document.getElementById('bfType'),
+        bfSize: document.getElementById('bfSize'),
+        bfOffBits: document.getElementById('bfOffBits'),
+        biSize: document.getElementById('biSize'),
+        biWidth: document.getElementById('biWidth'),
+        biHeight: document.getElementById('biHeight'),
+        biPlanes: document.getElementById('biPlanes'),
+        biBitCount: document.getElementById('biBitCount'),
+        biCompression: document.getElementById('biCompression'),
+        biClrUsed: document.getElementById('biClrUsed')
     }
     if (!graphNow) {
-        infoTable.fname.value =  infoTable.bfType.value = infoTable.bfSize.value =
-         infoTable.bfOffBits.value = infoTable.biSize.value = infoTable.biWidth.value = 
-         infoTable.biHeight.value = infoTable.biPlanes.value = infoTable.biBitCount.value=
-         infoTable.biCompression.value = infoTable.biClrUsed.value = ""
+        infoTable.fname.value = infoTable.bfType.value = infoTable.bfSize.value =
+            infoTable.bfOffBits.value = infoTable.biSize.value = infoTable.biWidth.value =
+            infoTable.biHeight.value = infoTable.biPlanes.value = infoTable.biBitCount.value =
+            infoTable.biCompression.value = infoTable.biClrUsed.value = ""
     }
-    else{
+    else {
         //    drawShape[Img._id] = {
         // 'src': srcstring,
         // 'header': newFile.bmpFile.BITMAPFILEHEADER,
         // 'info': newFile.bmpFile.BITMAPINFO,
         // 'colorMap': newFile.bmpFile.tagRGBQUAD
-    
+
         let id = graphNow._id
         infoTable.fname.value = drawShape[id].src
         infoTable.bfType.value = drawShape[id].header.bfType
         infoTable.bfSize.value = drawShape[id].header.bfSize
         infoTable.bfOffBits.value = drawShape[id].header.bfOffBits
-         infoTable.biSize.value = drawShape[id].info.biSize
-         infoTable.biWidth.value = drawShape[id].info.biWidth
+        infoTable.biSize.value = drawShape[id].info.biSize
+        infoTable.biWidth.value = drawShape[id].info.biWidth
         infoTable.biHeight.value = drawShape[id].info.biHeight
-        infoTable.biPlanes.value =drawShape[id].info.biPlanes
-         infoTable.biBitCount.value=drawShape[id].info.biBitCount
+        infoTable.biPlanes.value = drawShape[id].info.biPlanes
+        infoTable.biBitCount.value = drawShape[id].info.biBitCount
         infoTable.biCompression.value = drawShape[id].info.biCompression
         infoTable.biClrUsed.value = drawShape[id].info.biClrUsed
 
@@ -416,7 +447,7 @@ function updateImageinfoPan() {
  * 添加 随机噪声addGaussiannoise
  */
 
-function addGaussiannoise(){
+function addGaussiannoise() {
     if (graphNow) {
         if (graphNow.type == 'gray') {
             let cans = graphNow.getImage().getContext('2d')
@@ -426,7 +457,7 @@ function addGaussiannoise(){
             let imdata = catx.data
             console.log(typeof imdata)
             // 添加噪声
-            Gaussiannoise(imdata,'gray')
+            Gaussiannoise(imdata, 'gray')
 
             // 画出直方图
             clearHistogram()
@@ -437,14 +468,14 @@ function addGaussiannoise(){
             cans.putImageData(catx, 0, 0)
             layer.draw();
         }
-        else{
+        else {
             // 不是灰度图先进行灰度化
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
 
             let imdata = catx.data
-            Gaussiannoise(imdata,'rgb')
+            Gaussiannoise(imdata, 'rgb')
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -452,21 +483,21 @@ function addGaussiannoise(){
             drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
             drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
             drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
-    
+
 
             cans.putImageData(catx, 0, 0)
             layer.draw();
         }
     }
 
-  
+
 }
 
 /**
  * 添加 椒盐噪声addPretzelnoise
  */
 
-function addPretzelnoise(){
+function addPretzelnoise() {
     if (graphNow) {
         if (graphNow.type == 'gray') {
             let cans = graphNow.getImage().getContext('2d')
@@ -475,7 +506,7 @@ function addPretzelnoise(){
 
             let imdata = catx.data
             // 添加噪声
-            Pretzelnoise(imdata,'gray')
+            Pretzelnoise(imdata, 'gray')
 
             // 画出直方图
             clearHistogram()
@@ -486,14 +517,14 @@ function addPretzelnoise(){
             cans.putImageData(catx, 0, 0)
             layer.draw();
         }
-        else{
+        else {
             // 不是灰度图先进行灰度化
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
 
             let imdata = catx.data
-            Pretzelnoise(imdata,'rgb')
+            Pretzelnoise(imdata, 'rgb')
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -501,7 +532,7 @@ function addPretzelnoise(){
             drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
             drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
             drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
-    
+
 
             cans.putImageData(catx, 0, 0)
             layer.draw();
@@ -513,7 +544,7 @@ function addPretzelnoise(){
  *  均值滤波 Meanvaluefiltering
  */
 
-function Meanvaluefiltering(){
+function Meanvaluefiltering() {
     if (graphNow) {
         if (graphNow.type == 'gray') {
             let cans = graphNow.getImage().getContext('2d')
@@ -523,18 +554,18 @@ function Meanvaluefiltering(){
             let imdata = catx.data
             let tmpdata = []
             // 取出灰度图的一个通道
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpdata[j] = imdata[i]
             }
             // console.log(tmpdata)
-            Meanvaluefilter(tmpdata,cans.canvas.width,cans.canvas.height)
+            Meanvaluefilter(tmpdata, cans.canvas.width, cans.canvas.height)
 
             console.log(tmpdata)
 
 
             // 写回原数组
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
-               imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
+                imdata[i] = imdata[i + 1] = imdata[i + 2] = tmpdata[j]
             }
 
             // 画出直方图
@@ -546,7 +577,7 @@ function Meanvaluefiltering(){
             cans.putImageData(catx, 0, 0)
             layer.draw();
         }
-        else{
+        else {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -557,31 +588,31 @@ function Meanvaluefiltering(){
 
             let tmprdata = []
             // 取出灰度图的一个通道
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmprdata[j] = imdata[i]
             }
             let tmpgdata = []
             // 取出灰度图的一个通道
-            for(let i = 1 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 1, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpgdata[j] = imdata[i]
             }
             let tmpbdata = []
             // 取出灰度图的一个通道
-            for(let i = 2 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 2, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpbdata[j] = imdata[i]
             }
 
-            Meanvaluefilter(tmprdata,cans.canvas.width,cans.canvas.height)
-            Meanvaluefilter(tmpgdata,cans.canvas.width,cans.canvas.height)
-            Meanvaluefilter(tmpbdata,cans.canvas.width,cans.canvas.height)
+            Meanvaluefilter(tmprdata, cans.canvas.width, cans.canvas.height)
+            Meanvaluefilter(tmpgdata, cans.canvas.width, cans.canvas.height)
+            Meanvaluefilter(tmpbdata, cans.canvas.width, cans.canvas.height)
 
             // 写回源数组
 
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 imdata[i] = tmprdata[j]
-                imdata[i+1] = tmpgdata[j]
-                imdata[i+2] = tmpbdata[j]
-             }
+                imdata[i + 1] = tmpgdata[j]
+                imdata[i + 2] = tmpbdata[j]
+            }
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -589,7 +620,7 @@ function Meanvaluefiltering(){
             drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
             drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
             drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
-    
+
 
             cans.putImageData(catx, 0, 0)
             layer.draw();
@@ -602,7 +633,7 @@ function Meanvaluefiltering(){
  * 
  */
 
-function Medianvaluefiltering(){
+function Medianvaluefiltering() {
     if (graphNow) {
         if (graphNow.type == 'gray') {
             let cans = graphNow.getImage().getContext('2d')
@@ -612,18 +643,18 @@ function Medianvaluefiltering(){
             let imdata = catx.data
             let tmpdata = []
             // 取出灰度图的一个通道
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpdata[j] = imdata[i]
             }
             // console.log(tmpdata)
-            Medianvaluefilter(tmpdata,cans.canvas.width,cans.canvas.height)
+            Medianvaluefilter(tmpdata, cans.canvas.width, cans.canvas.height)
 
             console.log(tmpdata)
 
 
             // 写回原数组
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
-               imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
+                imdata[i] = imdata[i + 1] = imdata[i + 2] = tmpdata[j]
             }
 
             // 画出直方图
@@ -635,7 +666,7 @@ function Medianvaluefiltering(){
             cans.putImageData(catx, 0, 0)
             layer.draw();
         }
-        else{
+        else {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -646,31 +677,31 @@ function Medianvaluefiltering(){
 
             let tmprdata = []
             // 取出灰度图的一个通道
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmprdata[j] = imdata[i]
             }
             let tmpgdata = []
             // 取出灰度图的一个通道
-            for(let i = 1 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 1, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpgdata[j] = imdata[i]
             }
             let tmpbdata = []
             // 取出灰度图的一个通道
-            for(let i = 2 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 2, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpbdata[j] = imdata[i]
             }
 
-            Medianvaluefilter(tmprdata,cans.canvas.width,cans.canvas.height)
-            Medianvaluefilter(tmpgdata,cans.canvas.width,cans.canvas.height)
-            Medianvaluefilter(tmpbdata,cans.canvas.width,cans.canvas.height)
+            Medianvaluefilter(tmprdata, cans.canvas.width, cans.canvas.height)
+            Medianvaluefilter(tmpgdata, cans.canvas.width, cans.canvas.height)
+            Medianvaluefilter(tmpbdata, cans.canvas.width, cans.canvas.height)
 
             // 写回源数组
 
-            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+            for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 imdata[i] = tmprdata[j]
-                imdata[i+1] = tmpgdata[j]
-                imdata[i+2] = tmpbdata[j]
-             }
+                imdata[i + 1] = tmpgdata[j]
+                imdata[i + 2] = tmpbdata[j]
+            }
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -678,7 +709,7 @@ function Medianvaluefiltering(){
             drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
             drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
             drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
-    
+
 
             cans.putImageData(catx, 0, 0)
             layer.draw();

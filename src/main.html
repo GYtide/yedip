@@ -278,7 +278,7 @@
         input.type = 'file';
         input.onchange = _this => {
             let file = Array.from(input.files)[0];
-            console.log(file);
+            // console.log(file);
             if (!file.type.includes('image/bmp')) {
                 alert('只能导入 BMP 位图');
                 return;

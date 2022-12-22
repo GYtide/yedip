@@ -87,11 +87,15 @@ function BITMAPINFO(biSize, biWidth, biHeight, biPlanes, biBitCount,
 
         // 彩色表/调色板（color table）
         this.tagRGBQUAD = tagRGBQUAD
-
         // 位图数据
         this.bitMapData = bitMapData
 
+
     }
+    
+     getImage(){
+        return {width:this.BITMAPINFO.biWidth,height:this.BITMAPINFO.biHeight,data:this.bitMapData}
+     }
 }
 
 
