@@ -242,11 +242,11 @@ function Meanvaluefilter(imdata, width, height) {
         for (let i = 1; i < width - 1; ++i) {
             averg = 0;
             //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
-            averg = Math.round(imdata[(j - 1) * height + (i - 1)] + imdata[(j - 1) * height + i]
-                + imdata[(j - 1) * height + (i + 1)] + imdata[j * height + (i - 1)]
-                + imdata[j * height + i + 1] + imdata[(j + 1) * height + (i - 1)]
-                + imdata[(j + 1) * height + i] + imdata[(j + 1) * height + i + 1] + imdata[j * height + i])/ 9;
-            imdata[j * height + i] = averg;
+            averg = Math.round(imdata[(j - 1) * width + (i - 1)] + imdata[(j - 1) * width + i]
+                + imdata[(j - 1) * width + (i + 1)] + imdata[j * width + (i - 1)]
+                + imdata[j * width + i + 1] + imdata[(j + 1) * width + (i - 1)]
+                + imdata[(j + 1) * width + i] + imdata[(j + 1) * width + i + 1] + imdata[j * width + i])/ 9;
+            imdata[j * width + i] = averg;
         }
     }
     return true;
@@ -281,13 +281,13 @@ function Medianvaluefilter(imdata, width, height) {
             averg = 0;
             //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
 
-            arr = [imdata[(j - 1) * height + (i - 1)], imdata[(j - 1) * height + i],
-            imdata[(j - 1) * height + (i + 1)], imdata[j * height + (i - 1)]
-                , imdata[j * height + i], imdata[j * height + i + 1], imdata[(j + 1) * height + (i - 1)]
-                , imdata[(j + 1) * height + i], imdata[(j + 1) * height + i + 1]]
+            arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
+            imdata[(j - 1) * width + (i + 1)], imdata[j * width + (i - 1)]
+                , imdata[j * width + i], imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
+                , imdata[(j + 1) * width + i], imdata[(j + 1) * width + i + 1]]
             sort(arr)
             medv = arr[4]
-            imdata[j * height + i] = medv;
+            imdata[j * width + i] = medv;
         }
     }
     return true;
@@ -335,10 +335,10 @@ function Horizontalsharpe(imdata, width, height) {
         for (let i = 1; i < width - 1; ++i) {
             averg = 0;
             // 进行锐化
-            newdata = tmpimdata[(j - 1) * height + (i - 1)] * 1 + tmpimdata[(j - 1) * height + i] * 2 +
-                tmpimdata[(j - 1) * height + (i + 1)] * 1 + tmpimdata[j * height + (i - 1)] * 0
-                + tmpimdata[j * height + i] * 0 + tmpimdata[j * height + i + 1] * 0 + tmpimdata[(j + 1) * height + (i - 1)] * (-1)
-                + tmpimdata[(j + 1) * height + i] * (-2) + tmpimdata[(j + 1) * height + i + 1] * (-1)
+            newdata = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 2 +
+                tmpimdata[(j - 1) * width + (i + 1)] * 1 + tmpimdata[j * width + (i - 1)] * 0
+                + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * 0 + tmpimdata[(j + 1) * width + (i - 1)] * (-1)
+                + tmpimdata[(j + 1) * width + i] * (-2) + tmpimdata[(j + 1) * width + i + 1] * (-1)
 
             imdata[j * height + i] = newdata;
 
@@ -352,10 +352,10 @@ function Horizontalsharpe(imdata, width, height) {
         for (let i = 1; i < width; i += 3) {
             averg = 0;
             // 进行锐化
-            arr = [imdata[(j - 1) * height + (i - 1)], imdata[(j - 1) * height + i],
-            imdata[(j - 1) * height + (i + 1)], imdata[j * height + (i - 1)]
-                , imdata[j * height + i], imdata[j * height + i + 1], imdata[(j + 1) * height + (i - 1)]
-                , imdata[(j + 1) * height + i], imdata[(j + 1) * height + i + 1]]
+            arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
+            imdata[(j - 1) * width + (i + 1)], imdata[j * width + (i - 1)]
+                , imdata[j * width + i], imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
+                , imdata[(j + 1) * width + i], imdata[(j + 1) * width + i + 1]]
             sort(arr)
             let mix
 
@@ -367,15 +367,15 @@ function Horizontalsharpe(imdata, width, height) {
 
             if (arr[0] < 0) {
                 mix = arr[0]
-                imdata[(j - 1) * height + (i - 1)] -= 2 * mix
-                imdata[(j - 1) * height + i] -= 2 * mix
-                imdata[(j - 1) * height + (i + 1)] -= 2 * mix
-                imdata[j * height + (i - 1)] -= 2 * mix
-                imdata[j * height + i] -= 2 * mix
-                imdata[j * height + i + 1] -= 2 * mix
-                imdata[(j + 1) * height + (i - 1)] -= 2 * mix
-                imdata[(j + 1) * height + i] -= 2 * mix
-                imdata[(j + 1) * height + i + 1] -= 2 * mix
+                imdata[(j - 1) * width + (i - 1)] -= 2 * mix
+                imdata[(j - 1) * width + i] -= 2 * mix
+                imdata[(j - 1) * width + (i + 1)] -= 2 * mix
+                imdata[j * width + (i - 1)] -= 2 * mix
+                imdata[j * width + i] -= 2 * mix
+                imdata[j * width + i + 1] -= 2 * mix
+                imdata[(j + 1) * width + (i - 1)] -= 2 * mix
+                imdata[(j + 1) * width + i] -= 2 * mix
+                imdata[(j + 1) * width + i + 1] -= 2 * mix
 
             }
 
@@ -501,7 +501,7 @@ function Horizontalenchase(imdata, width, height) {
     for (let j = 0; j < height; ++j) {
         for (let i = 1; i < width; ++i) {
             
-            imdata[j * height + i] =  tmpdata[j * height + i] - tmpdata[j * height + i - 1] +128
+            imdata[j * width + i] =  tmpdata[j * width + i] - tmpdata[j * width + i - 1] +128
         }
     }
 

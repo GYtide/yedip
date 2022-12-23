@@ -7,10 +7,10 @@ const { FileParser } = require(path.join(path.resolve(__dirname, '..'), 'store',
 // 
 // srcstring = 'E:/_todo/dip_expe/yedip/res/Tmp.bmp'
 
-// srcstring = 'E:/_todo/dip_expe/yedip/res/928.bmp'
+// srcstring = 'E:/_todo/dip_expe/yedip/res/919.bmp'
 
 // srcstring = 'E:/_todo/dip_expe/yedip/res/chinamap.bmp'
-// srcstring = 'E:/_todo/dip_expe/yedip/res/zg.bmp'
+srcstring = 'E:/_todo/dip_expe/yedip/res/1543.bmp'
 
 // srcstring = 'E:/_todo/dip_expe/yedip/res/256car.bmp'
 

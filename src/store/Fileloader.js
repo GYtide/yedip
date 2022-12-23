@@ -31,70 +31,78 @@ class FileParser {
         let colorMap = []
         // 根据文件头里的位图数据偏移量计算出实际像素数组的位置
         let bitMapData = fileBitStream.slice(Header.bfOffBits,)
-
-        // console.log("bitMaplength", bitMapData.length)s
-
+        var datalength = Info.biHeight * Info.biWidth * Info.biBitCount / 8
+        console.log("bitMaplength", bitMapData.length, 'HxW/8:', datalength)
         let mapData = []
-        
-        // 测试大小是否正常
-        //res/map.bmp' 和 /res/zg.bmp' 两个文件的数据大小比 高度*宽度*色深/8 大一点，不知道原因。 
-        //  如果大小不符合暂时抛出异常
-        // 
-        // if (bitMapData.length != Info.biHeight * Info.biWidth * Info.biBitCount / 8) {
-        //     throw { 
-        //         err:"数据大小与高宽度异常",
-        //         file:new Dip(Header,Info,colorMap,mapData)
-        // }
-        // }
-        // else {
 
         //     // 根据信息头的颜色数判断是否有调色板 
-            if (Info.biBitCount <= 8) {
-                // 存在调色板
-                let colorBitStream = fileBitStream.slice(14 + infoHeadersize, Header.bfOffBits)
-                colorMap = this.getColorMap(colorBitStream)
+        if (Info.biBitCount == 8) {
+            // 存在调色板
+            let colorBitStream = fileBitStream.slice(14 + infoHeadersize, Header.bfOffBits)
+            colorMap = this.getColorMap(colorBitStream)
 
-                //  计算出真实值 ， 调色板为 B G R 0（保留字）
+            //  计算出真实值 ， 调色板为 B G R 0（保留字）
 
-                for (let i = 0; i < bitMapData.length; ++i) {
+            let newWidth = Info.biWidth
 
-                    // let index = (Info.biHeight - i/Info.biWidth)*Info.biHeight + i%(Info.biWidth)
-                    let index = (Info.biHeight - 1 - Math.floor((i) / Info.biWidth)) * Info.biHeight + i % (Info.biWidth)
-                    // console.log(index)
-                    // if(i%Info.biWidth == 0){
+            if (Info.biWidth % 4 != 0) {
+                newWidth = newWidth + 4 - newWidth % 4
+            } else {
 
-                    //     console.log(index)
-                    // }
-                    mapData[4 * index] = colorMap[bitMapData[i]].R
-                    mapData[4 * index + 1] = colorMap[bitMapData[i]].G
-                    mapData[4 * index + 2] = colorMap[bitMapData[i]].B
+            }
+            console.log(Info.biHeight, Info.biWidth, newWidth)
+            for (let j = 0; j < Info.biHeight; ++j) {
+
+                for (let i = 0; i < newWidth; ++i) {
+                    if (i >= Info.biWidth) {
+                        // 跳过补齐字节
+                        break
+                    }
+
+                    let index = (Info.biHeight - 1 - j) * Info.biWidth + i
+                    mapData[4 * index] = colorMap[bitMapData[j * newWidth + i]].R
+                    mapData[4 * index + 1] = colorMap[bitMapData[j * newWidth + i]].G
+                    mapData[4 * index + 2] = colorMap[bitMapData[j * newWidth + i]].B
                     mapData[4 * index + 3] = 255
-
-                    // console.log( i,':',mapData[4 * index],mapData[4 * index+1],mapData[4 * index+2],mapData[4*index+3])
-                }
-
-                console.log(mapData.length)
-                for(let i = 0 ; i  < mapData.length ; i+=4){
-                    console.log(i,':',mapData[i],mapData[i+1],mapData[i+2],mapData[i+3])
                 }
 
             }
-        //     else {
+        }
+        else if(Info.biBitCount == 24){
 
-        //         for (let i = 0, j = 0; i < bitMapData.length; i += 3, j += 4) {
+            let newWidth = Info.biWidth * 3
+            if (Info.biWidth % 4 != 0) {
+                newWidth = newWidth + 4 - newWidth % 4
+            } else {
 
-        //             let index = j%(4*Info.biWidth) + (Info.biHeight - 1 - Math.floor(j / (4 * Info.biWidth))) * Info.biWidth*4
+            }
+            console.log(Info.biHeight,Info.biWidth,newWidth)
+            for (let j = 0; j < Info.biHeight; ++j) {
 
-        //             mapData[index] = bitMapData[i + 2]
-        //             mapData[index + 1] = bitMapData[i + 1]
-        //             mapData[index + 2] = bitMapData[i]
-        //             mapData[index + 3] = 255
-        //         }
-        //     }
+                for (let i = 0; i < newWidth ; i+=3) {
+                    if (i >= Info.biWidth * 3) {
+                        // 跳过补齐字节
+                        break
+                    }
 
-            var bmpFile = new Dip(Header, Info, colorMap, bitMapData)
+                    let index = (Info.biHeight - 1 - j) * Info.biWidth*4 + i*4/3
+                    mapData[index] = bitMapData[j * newWidth + i + 2]
+                    mapData[index + 1] = bitMapData[j * newWidth+ i+1]
+                    mapData[index + 2] = bitMapData[j * newWidth + i]
+                    mapData[index + 3] = 255
+                }
 
-            return bmpFile
+            }
+            console.log(mapData.length)
+
+        }
+        else{
+            throw '无法读取文件'
+        }
+
+        var bmpFile = new Dip(Header, Info, colorMap, mapData)
+
+        return bmpFile
         // }
 
 

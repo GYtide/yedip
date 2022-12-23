@@ -18,17 +18,17 @@ function drawImage(imageObj) {
         var newFileloader = new FileParser(rbuf)
     }catch (err){
         console.log(err);
-        alert("文件读取失败,位图数据区大小异常",err)
+        alert("文件读取失败,位图数据异常",err)
         return
     }
     
     var newFile = newFileloader.getFile()
 
-    console.log(newFile)
+    // console.log(newFile)
 
     var newImage = newFile.getImage()
 
-    // console.log(newImage)
+    console.log(newImage)
 
     // 为了使用像素进行自定义操作，使用 canvas 作为子容器承载 Image dom
     var canvas = document.createElement('canvas');
@@ -36,6 +36,8 @@ function drawImage(imageObj) {
     canvas.height = newImage.height
     console.log(canvas.width, canvas.height)
     var ctx = canvas.getContext('2d');
+
+    
     let catx = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height)
     let imdata = catx.data
 
@@ -46,22 +48,23 @@ function drawImage(imageObj) {
 
         for (let i = 0; i < newImage.width; ++i) {
 
-            imdata[(j * newImage.height + i) * 4] = newdata[(j * newImage.height + i) * 4]
-            imdata[(j * newImage.height + i) * 4 + 1] = newdata[(j * newImage.height + i) * 4 + 1]
-            imdata[(j * newImage.height + i) * 4 + 2] = newdata[(j * newImage.height + i) * 4 + 2]
-            imdata[(j * newImage.height + i) * 4 + 3] = newdata[(j * newImage.height + i) * 4 + 3]
+            imdata[(j * newImage.width + i) * 4] = newdata[(j * newImage.width + i) * 4]
+            imdata[(j * newImage.width + i) * 4 + 1] = newdata[(j * newImage.width + i) * 4 + 1]
+            imdata[(j * newImage.width + i) * 4 + 2] = newdata[(j * newImage.width + i) * 4 + 2]
+            imdata[(j * newImage.width + i) * 4 + 3] = newdata[(j * newImage.width + i) * 4 + 3]
         }
     }
 
     ctx.putImageData(catx, 0, 0)
+
 
     var Img = new Konva.Image({
         name: 'image',
         image: canvas,
         x: stage.width() / 2 - imageObj.width / 2,
         y: stage.height() / 2 - imageObj.height / 2,
-        width: imageObj.width,
-        height: imageObj.width,
+        width: newImage.width,
+        height: newImage.height,
         draggable: true
     });
 
