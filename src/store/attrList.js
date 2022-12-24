@@ -3,10 +3,10 @@
 */
 
 /**
- * 灰度化
+ * 返回初始图
  * @param method 灰度化方式
  */
-function rgb2gray(method) {
+function return2gray(method) {
 
     if (graphNow) {
         let cans = graphNow.getImage().getContext('2d')
@@ -80,6 +80,87 @@ function return2src() {
     }
 }
 
+
+/**
+ * 
+ * 图像灰度化
+ * 
+ */
+function rgb2gray(method) {
+    if(graphNow){
+        let cans = graphNow.getImage().getContext('2d')
+
+        let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+        let imdata = catx.data
+        
+        var tmpdata = []
+        if(method == 'mean'){
+            tmpdata =  meanGray(imdata)
+        }
+        else{
+            tmpdata = weightGray(imdata)
+        }
+        
+        graphNow.type = 'gray'
+        // 写回原数组
+
+        for(let i = 0 ; i < imdata.length ;++i){
+            imdata[i] = tmpdata[i]
+        }
+
+        // 画出直方图
+        clearHistogram()
+        let hisdata = histogramData(imdata)
+        // 画出灰度直方图
+        drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+
+        cans.putImageData(catx, 0, 0)
+        layer.draw();
+    }
+}
+
+/**
+ * 
+ * Inverted 图像取反
+ * 
+ */
+
+function Invertedcolor(){
+    if(graphNow){
+        if(graphNow.type == 'rgb'){
+            rgb2gray()
+            Invertedcolor()
+        }
+        else{
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+    
+            let imdata = catx.data
+            let tmpdata = []
+
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpdata[j] = imdata[i]
+            }
+            
+            Inverted(tmpdata)
+
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+             }
+
+            // 画出直方图
+            clearHistogram()
+            let hisdata = histogramData(imdata)
+            // 画出灰度直方图
+            drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+    
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+        }
+    }
+}
 
 /**
  * 清空现有直方图
@@ -159,7 +240,7 @@ function Equalization() {
             layer.draw();
         }
         else{
-            // 不是灰度图对三个通道分别进行均衡化
+            // 不是灰度图转化为灰度图
             rgb2gray()
 
             let cans = graphNow.getImage().getContext('2d')
@@ -633,7 +714,7 @@ function Contourextraction(){
         }
         else{
              // 先将图像二值化
-             rgb2gray('mean')
+             rgb2gray()
              Iterativethresholdpartitioning()
              Contourextraction()
         }

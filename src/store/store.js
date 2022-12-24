@@ -20,6 +20,7 @@ function weightGray(imdata) {
         grayImage[i] = lm
         grayImage[i + 1] = lm
         grayImage[i + 2] = lm
+        grayImage[i + 3] = 255
     }
 
     return grayImage
@@ -44,10 +45,25 @@ function meanGray(imdata) {
         grayImage[i] = lm
         grayImage[i + 1] = lm
         grayImage[i + 2] = lm
+        grayImage[i + 3] = 255
     }
 
     return grayImage
 
+}
+
+/**
+ * 
+ * 取反
+ * @param imdata 原始像素数组
+ * 
+ */
+
+function Inverted(imdata){
+    
+    for(let i = 0 ; i < imdata.length ;++i){
+        imdata[i] = 255 - imdata[i]
+    }
 }
 
 
