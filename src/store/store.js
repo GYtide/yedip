@@ -119,60 +119,59 @@ function HistogramEqualization(imdata) {
     }
 }
 
+/**
+ * 生成高斯分布(正态分布)数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ * @param mathExpe 期望
+ * @param variance 方差
+ */
+
+
+function gauss(width,height,mathExpe,variance) {
+
+    var gaussmap = []
+
+    for(let i = 0 ; i < width*height ;++i){
+        let A = Math.sqrt((-2)*Math.log(Math.random()))
+
+        let B = 2*Math.PI*Math.random()
+    
+        let C = A*Math.cos(B) 
+
+        r = mathExpe + C*variance
+        gaussmap[i] = Math.round(r)
+    }
+
+    return gaussmap
+}
+
 
 /**
  * 添加随机噪声 Gaussiannoise
  * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ * @param mathExpe 期望
+ * @param variance 方差
  */
 
-function Gaussiannoise(imdata, type) {
-    if (type == 'rgb') {
-        for (let j = 0; j < imdata.length; j += 4) {
+function Gaussiannoise(imdata,width,height,mathExpe,variance) {
 
-            noisepoint = Math.round(Math.random() * 60 - 30); //-30 - 60随机数
-            if (imdata[j] + noisepoint > 255) {
-                imdata[j] = 255
-            } else if (imdata[j] + noisepoint < 0) {
-                imdata[j] = 0
-            }
-            else {
+    var gaussMap = gauss(width,height,mathExpe,variance)
+    
+    // 将噪声加到原图像上
+    for(let i = 0; i < width*height ; ++i){
+        imdata[i] += gaussMap[i]
 
-                imdata[j] = imdata[j] + noisepoint;
-            }
-            if (imdata[j + 1] + noisepoint > 255) {
-                imdata[j + 1] = 255
-            } else if (imdata[j + 1] + noisepoint < 0) {
-                imdata[j + 1] = 0
-            }
-            else {
-
-                imdata[j + 1] = imdata[j + 1] + noisepoint;
-            }
-            if (imdata[j + 2] + noisepoint > 255) {
-                imdata[j + 2] = 255
-            } else if (imdata[j + 2] + noisepoint < 0) {
-                imdata[j + 2] = 0
-            }
-            else {
-
-                imdata[j + 2] = imdata[j + 2] + noisepoint;
-            }
+        if(imdata[i]>255){
+            imdata[i] = 255
         }
-    }
-    else {
-        for (let j = 0; j < imdata.length; j += 4) {
-
-            noisepoint = Math.round(Math.random() * 60 - 30); //-30 - 60随机数
-            if (imdata[j] + noisepoint > 255) {
-                imdata[j] = imdata[j + 1] = imdata[j + 2] = 255
-            } else {
-
-                imdata[j] = imdata[j + 1] = imdata[j + 2] = imdata[j] + noisepoint;
-            }
+        else if(imdata[i]<0){
+            imdata[i] = 0
         }
+
     }
-
-
     return true;
 
 }
@@ -242,10 +241,11 @@ function Meanvaluefilter(imdata, width, height) {
         for (let i = 1; i < width - 1; ++i) {
             averg = 0;
             //求周围近邻均值，我采用的是邻近。可以采用邻近也就是包含其本身点
-            averg = Math.round(imdata[(j - 1) * width + (i - 1)] + imdata[(j - 1) * width + i]
+            averg = Math.round((imdata[(j - 1) * width + (i - 1)] + imdata[(j - 1) * width + i]
                 + imdata[(j - 1) * width + (i + 1)] + imdata[j * width + (i - 1)]
                 + imdata[j * width + i + 1] + imdata[(j + 1) * width + (i - 1)]
-                + imdata[(j + 1) * width + i] + imdata[(j + 1) * width + i + 1] + imdata[j * width + i])/ 9;
+                + imdata[(j + 1) * width + i] + imdata[(j + 1) * width + i + 1] 
+                + imdata[j * width + i])/ 9);
             imdata[j * width + i] = averg;
         }
     }
@@ -387,95 +387,65 @@ function Horizontalsharpe(imdata, width, height) {
 }
 
 /**
- * 垂直一阶锐化
+ * Sobel一阶锐化
  * @param imdata 原始像素数组
  * @param width 图像宽度
  * @param height 图像高度
  * 
- * 使用以下横向模板 
  * 
- *     1  0 -1
- *     2  0 -2
- *     1  0 -1
  * 
- * 之后加一正整数
+ * D1  =  1  0 -1
+ *        2  0 -2
+ *        1  0 -1
+ * 
+ * D2 =   1  2  1
+ *        0  0  0
+ *       -1 -2 -1
+ * 
+ * delta = sqrt(D1*D1 + D2*D2)
+ * 
  */
 
 
-function Verticalsharpe(imdata, width, height) {
+function Sobelsharpe(imdata, width, height) {
     var tmpimdata = []
     // 复刻一个数组
     for (let i = 0; i < imdata.length; ++i) {
         tmpimdata[i] = imdata[i]
     }
 
-
-    // 排序函数
-    function sort(arr) {
-        for (var j = 0; j < arr.length - 1; j++) {
-            for (var i = 0; i < arr.length - 1; i++) {
-                // 如果前一个数 大于 后一个数 就交换两数位置
-                if (arr[i] > arr[i + 1]) {
-                    var temp = arr[i];
-                    arr[i] = arr[i + 1];
-                    arr[i + 1] = temp;
-                }
-            }
-        }
-    }
-
     for (let j = 1; j < height - 1; ++j) {
         for (let i = 1; i < width - 1; ++i) {
             averg = 0;
-            // 进行锐化
-            newdata = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 0 +
+            // D1  =  1  0 -1
+            //        2  0 -2
+            //        1  0 -1
+            
+            d1 = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 0 +
                 tmpimdata[(j - 1) * width + (i + 1)] * (-1) + tmpimdata[j * width + (i - 1)] * 2
                 + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * (-2) + tmpimdata[(j + 1) * width + (i - 1)] * 1
                 + tmpimdata[(j + 1) * width + i] * 0 + tmpimdata[(j + 1) * width + i + 1] * (-1)
 
-            imdata[j * width + i] = newdata;
+            // D2 = 1  2  1 
+            //      0  0  0
+            //     -1 -2 -1
 
-            // console.log(newdata)s
-        }
-    }
+            d2 = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 2 +
+            tmpimdata[(j - 1) * width + (i + 1)] * 1 + tmpimdata[j * width + (i - 1)] * 0
+            + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * 0 + tmpimdata[(j + 1) * width + (i - 1)] * (-1)
+            + tmpimdata[(j + 1) * width + i] * (-2) + tmpimdata[(j + 1) * width + i + 1] * (-1)
 
-    // 锐化后处理，添加范围内最小数的绝对值
 
-    for (let j = 1; j < height; j += 3) {
-        for (let i = 1; i < width; i += 3) {
-            averg = 0;
-            // 进行锐化
-            arr = [imdata[(j - 1) * width + (i - 1)], imdata[(j - 1) * width + i],
-            imdata[(j - 1) * width + (i + 1)], imdata[j * width + (i - 1)]
-                , imdata[j * width + i], imdata[j * width + i + 1], imdata[(j + 1) * width + (i - 1)]
-                , imdata[(j + 1) * width + i], imdata[(j + 1) * width + i + 1]]
-            sort(arr)
-            let mix
+            newdata = Math.round( Math.sqrt(d1*d1 + d2*d2))
 
-            // for(let col = - 1 ; col < 2 ;++col){
-            //     for(let row  = -1 ; row < 2 ; ++row){
-            //             imdata
-            //     }
-            // }
-
-            if (arr[0] < 0) {
-                mix = arr[0]
-                imdata[(j - 1) * width + (i - 1)] -= 2 * mix
-                imdata[(j - 1) * width + i] -= 2 * mix
-                imdata[(j - 1) * width + (i + 1)] -= 2 * mix
-                imdata[j * width + (i - 1)] -= 2 * mix
-                imdata[j * width + i] -= 2 * mix
-                imdata[j * width + i + 1] -= 2 * mix
-                imdata[(j + 1) * width + (i - 1)] -= 2 * mix
-                imdata[(j + 1) * width + i] -= 2 * mix
-                imdata[(j + 1) * width + i + 1] -= 2 * mix
-
+            if(newdata > 255){
+                newdata = 255
             }
 
+            // console.log(newdata)
+            imdata[j * width + i] = newdata
         }
     }
-
-
     return true;
 }
 

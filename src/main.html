@@ -79,7 +79,7 @@
                             <li class="contentIndex">
                                 <label class="">噪声抑制</label>
                                 <br>
-                                <button class="attrbtn" onclick="addGaussiannoise()">添加随机噪声</button>
+                                <button class="attrbtn" onclick="addGaussiannoise()">添加高斯噪声</button>
                                 <button class="attrbtn" onclick="addPretzelnoise()">添加椒盐噪声</button>
                                 <button class="attrbtn" onclick="Meanvaluefiltering()">均值滤波</button>
                                 <button class="attrbtn" onclick="Medianvaluefiltering()">中值滤波</button>
@@ -88,7 +88,7 @@
                                 <label class="">锐化和边缘检测</label>
                                 <br>
                                 <button class="attrbtn" onclick="Horizontalsharpening()">水平一阶锐化</button>
-                                <button class="attrbtn" onclick="Verticalsharpening()">垂直一阶锐化</button>
+                                <button class="attrbtn" onclick="Sobelsharpening()">Sobel锐化</button>
                                 <button class="attrbtn" onclick="LOGsharpening()">LOG锐化</button>
                                 <button class="attrbtn" onclick="Horizontalenchasing()">水平浮雕</button>
                             </li>
@@ -111,7 +111,7 @@
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
                                     onclick="transformerOclick(this)" value="" class="attrinfo" checked="checked">
                                 <div style="font-size: 10px;">
-                                    注：绘图框架的 transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
+                                   transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
                                 </div>
                             </li>
 
@@ -448,9 +448,9 @@
         
         let imdata = catx.data
         console.log(graphNow)
-        console.log(imdata)
-        console.log(cans.canvas.width)
-        console.log(cans.canvas.height)
+        // console.log(imdata)
+        // console.log(cans.canvas.width)
+        // console.log(cans.canvas.height)
         
         let hisdata = histogramData(imdata)
 

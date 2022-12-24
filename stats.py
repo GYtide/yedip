@@ -19,9 +19,9 @@ def get_files(path):
 
 
 if __name__ == '__main__':
-    # get_files(r'E:/_todo/dip_expe/yedip/src')
+    get_files(r'E:/_todo/dip_expe/yedip/src')
     # get_files(r'E:/projects/fromgithub/LenovoLegionToolkit-2.7.1')
-    get_files(r'E:/projects/fromgithub/LenovoLegionToolkit-2.7.1')
+    # get_files(r'E:/projects/fromgithub/LenovoLegionToolkit-2.7.1')
     
 
 

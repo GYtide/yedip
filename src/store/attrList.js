@@ -271,11 +271,11 @@ function Horizontalsharpening(){
 
 
 /**
- * 垂直一阶锐化
+ * Sobel一阶锐化
  * 
  */
 
-function Verticalsharpening(){
+function Sobelsharpening(){
     if (graphNow) {
         if (graphNow.type == 'gray') {
             let cans = graphNow.getImage().getContext('2d')
@@ -289,7 +289,7 @@ function Verticalsharpening(){
                 tmpdata[j] = imdata[i]
             }
             // console.log(tmpdata)
-            Verticalsharpe(tmpdata,cans.canvas.width,cans.canvas.height)
+            Sobelsharpe(tmpdata,cans.canvas.width,cans.canvas.height)
 
             // console.log(tmpdata)
 
@@ -333,9 +333,9 @@ function Verticalsharpening(){
                 tmpbdata[j] = imdata[i]
             }
 
-            Verticalsharpe(tmprdata,cans.canvas.width,cans.canvas.height)
-            Verticalsharpe(tmpgdata,cans.canvas.width,cans.canvas.height)
-            Verticalsharpe(tmpbdata,cans.canvas.width,cans.canvas.height)
+            Sobelsharpe(tmprdata,cans.canvas.width,cans.canvas.height)
+            Sobelsharpe(tmpgdata,cans.canvas.width,cans.canvas.height)
+            Sobelsharpe(tmpbdata,cans.canvas.width,cans.canvas.height)
 
             // 写回源数组
 

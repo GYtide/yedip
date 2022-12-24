@@ -36,7 +36,7 @@ class FileParser {
         let mapData = []
 
         //     // 根据信息头的颜色数判断是否有调色板 
-        if (Info.biBitCount == 8) {
+        if (Info.biBitCount == 8 || Info.biBitCount == 4) {
             // 存在调色板
             let colorBitStream = fileBitStream.slice(14 + infoHeadersize, Header.bfOffBits)
             colorMap = this.getColorMap(colorBitStream)
@@ -105,7 +105,7 @@ class FileParser {
         return bmpFile
         // }
 
-
+        
     }
 
 

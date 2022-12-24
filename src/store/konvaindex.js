@@ -77,7 +77,6 @@ function drawImage(imageObj) {
         'src': srcstring,
         'header': newFile.BITMAPFILEHEADER,
         'info': newFile.BITMAPINFO,
-        'colorMap': newFile.tagRGBQUAD
     }
 
     updateImageinfoPan()
@@ -447,7 +446,7 @@ function updateImageinfoPan() {
 }
 
 /**
- * 添加 随机噪声addGaussiannoise
+ * 添加 高斯噪声addGaussiannoise
  */
 
 function addGaussiannoise() {
@@ -458,9 +457,21 @@ function addGaussiannoise() {
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
 
             let imdata = catx.data
-            console.log(typeof imdata)
-            // 添加噪声
-            Gaussiannoise(imdata, 'gray')
+            let tmpdata = []
+            // 取出灰度图的一个通道
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpdata[j] = imdata[i]
+            }
+            // console.log(tmpdata)
+            Gaussiannoise(tmpdata,cans.canvas.width,cans.canvas.height,0,10)
+
+            // console.log(tmpdata)
+
+
+            // 写回原数组
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+               imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+            }
 
             // 画出直方图
             clearHistogram()
@@ -471,14 +482,42 @@ function addGaussiannoise() {
             cans.putImageData(catx, 0, 0)
             layer.draw();
         }
-        else {
-            // 不是灰度图先进行灰度化
+        else{
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
 
             let imdata = catx.data
-            Gaussiannoise(imdata, 'rgb')
+
+            // 取出每一个通道的数据分别进行滤波
+
+            let tmprdata = []
+            // 取出灰度图的一个通道
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmprdata[j] = imdata[i]
+            }
+            let tmpgdata = []
+            // 取出灰度图的一个通道
+            for(let i = 1 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpgdata[j] = imdata[i]
+            }
+            let tmpbdata = []
+            // 取出灰度图的一个通道
+            for(let i = 2 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpbdata[j] = imdata[i]
+            }
+
+            Gaussiannoise(tmprdata,cans.canvas.width,cans.canvas.height,0,10)
+            Gaussiannoise(tmpgdata,cans.canvas.width,cans.canvas.height,0,10)
+            Gaussiannoise(tmpbdata,cans.canvas.width,cans.canvas.height,0,10)
+
+            // 写回源数组
+
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                imdata[i] = tmprdata[j]
+                imdata[i+1] = tmpgdata[j]
+                imdata[i+2] = tmpbdata[j]
+             }
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -486,13 +525,12 @@ function addGaussiannoise() {
             drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
             drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
             drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
-
+    
 
             cans.putImageData(catx, 0, 0)
             layer.draw();
         }
     }
-
 
 }
 
@@ -590,17 +628,17 @@ function Meanvaluefiltering() {
             // 取出每一个通道的数据分别进行滤波
 
             let tmprdata = []
-            // 取出灰度图的一个通道
+            // 取出R通道
             for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmprdata[j] = imdata[i]
             }
             let tmpgdata = []
-            // 取出灰度图的一个通道
+            // 取出G通道
             for (let i = 1, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpgdata[j] = imdata[i]
             }
             let tmpbdata = []
-            // 取出灰度图的一个通道
+            // 取出B通道
             for (let i = 2, j = 0; i < imdata.length; i += 4, j += 1) {
                 tmpbdata[j] = imdata[i]
             }
