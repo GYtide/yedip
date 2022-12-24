@@ -72,7 +72,6 @@
                                 <label class="">图像还原</label>
                                 <br>
                                 <button class="attrbtn" onclick="return2src()">还原为原图</button>
-                                <button class="attrbtn" onclick="return2gray()">原图加权灰度化</button>
                                 <button class="attrbtn" onclick="return2gray('mean')">原图平均灰度化</button>
                             </li>
                             <li class="contentIndex">
@@ -109,9 +108,9 @@
                                 <label class="">二值处理</label>
                                 <br>
                                 <button class="attrbtn" onclick="Iterativethresholdpartitioning()">迭代阈值二值化</button>
-                                <button class="attrbtn" onclick="Horizontalcorrosion()">水平腐蚀</button>
-                                <button class="attrbtn" onclick="Horizontalexpansion()">水平膨胀</button>
-                                <button class="attrbtn" onclick="rgb2gray()">孤立点去除</button>
+                                <button class="attrbtn" onclick="corrosion()">腐蚀</button>
+                                <button class="attrbtn" onclick="expansion()">膨胀</button>
+                                <button class="attrbtn" onclick="rmIsolatedPoints()">孤立点去除</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="attrchoice">使用 Transformer :</label>
@@ -455,7 +454,7 @@
         
         let imdata = catx.data
         console.log(graphNow)
-        // console.log(imdata)
+        console.log(imdata)
         // console.log(cans.canvas.width)
         // console.log(cans.canvas.height)
         

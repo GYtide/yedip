@@ -73,6 +73,7 @@ input[type="radio"]:checked+label+div {
     float: left;
     margin-bottom: 10px;
     color:rgb(19, 44, 120);
+    /* background-color: #5177bf; */
 
 }
 

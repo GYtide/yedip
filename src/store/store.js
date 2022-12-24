@@ -59,9 +59,9 @@ function meanGray(imdata) {
  * 
  */
 
-function Inverted(imdata){
-    
-    for(let i = 0 ; i < imdata.length ;++i){
+function Inverted(imdata) {
+
+    for (let i = 0; i < imdata.length; ++i) {
         imdata[i] = 255 - imdata[i]
     }
 }
@@ -549,12 +549,10 @@ function Iterativethresholdpart(imdata) {
 
         if (Math.abs(Tn - T) < 0.5) {
             T = Tn
-            console.log('T', T, 'Tn', Tn)
             break
         }
         else {
             T = Tn
-            console.log('T', T, 'Tn', Tn)
             continue
         }
 
@@ -595,21 +593,135 @@ function Contourextract(imdata, width, height) {
 
     for (let j = 1; j < height - 1; ++j) {
         for (let i = 1; i < width - 1; ++i) {
-            
+
             let flag = 0 //是否相同,0为相同
-            for(let k = -1 ; k < 2 ; ++k){
-                for( let m = -1 ; m < 2 ;++m){
-                    if(tmpimdata[(j+k)*width + i + m] != imdata[j*width + i]){
+            for (let k = -1; k < 2; ++k) {
+                for (let m = -1; m < 2; ++m) {
+                    if (tmpimdata[(j + k) * width + i + m] != tmpimdata[j * width + i]) {
                         flag = 1
                         break
                     }
                 }
-                if( flag == 1){
+                if (flag == 1) {
                     break
                 }
             }
-            if(flag == 0){
-                imdata[j*width + i] = 255
+            if (flag == 0) {
+                imdata[j * width + i] = 255
+            }
+        }
+    }
+
+
+}
+
+
+/**
+ * corros 腐蚀
+ * 
+ * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ *     
+ * 结构元素        o  o
+ *               o  o
+ * 原点为左上角，如果都为 255 则保持不变 如果 有一个为 0 则为 0 
+ */
+
+
+function corros(imdata, width, height) {
+    var tmpimdata = []
+    // 复刻一个数组
+    for (let i = 0; i < imdata.length; ++i) {
+        tmpimdata[i] = imdata[i]
+    }
+
+
+    for (let j = 0; j < height - 1; ++j) {
+        for (let i = 0; i < width - 1; ++i) {
+            if (tmpimdata[j * width + i] == 255 && tmpimdata[j * width + i + 1]
+                == 255 && tmpimdata[(j + 1) * width + i] == 255 && tmpimdata[(j + 1) * width + i + 1] == 255) {
+                imdata[j * width + i] = 255
+            }
+            else{
+                imdata[j*width + i] = 0
+            }
+
+        }
+    }
+}
+
+
+/**
+ * expans 膨胀
+ * 
+ * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ *     
+ * 结构元素        o  o
+ *               o  o
+ * 原点为左上角，如果都为 0 则保持不变 如果 有一个为 255 则为 255 
+ */
+
+
+function expans(imdata, width, height) {
+    var tmpimdata = []
+    // 复刻一个数组
+    for (let i = 0; i < imdata.length; ++i) {
+        tmpimdata[i] = imdata[i]
+    }
+
+
+    for (let j = 0; j < height - 1; ++j) {
+        for (let i = 0; i < width - 1; ++i) {
+            if (tmpimdata[j * width + i] == 255 || tmpimdata[j * width + i + 1]
+                == 255 || tmpimdata[(j + 1) * width + i] == 255 || tmpimdata[(j + 1) * width + i + 1] == 255) {
+                imdata[j * width + i] = 255
+            }
+            else{
+                imdata[j*width + i] = 0
+            }
+
+        }
+    }
+}
+
+/**
+ * rmisolatedpoint 去除孤立点
+ * 
+ * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ *     
+ * 如果八邻域全是 255 则为 255 全是 0 则是 0
+ */
+
+function rmisolatedpoint(imdata,width,height){
+    var tmpimdata = []
+    // 复刻一个数组
+    for (let i = 0; i < imdata.length; ++i) {
+        tmpimdata[i] = imdata[i]
+    }
+
+
+    for (let j = 1; j < height - 1; ++j) {
+        for (let i = 1; i < width - 1; ++i) {
+
+            let flag = 0 //是否相同,0为相同
+            for (let k = -1; k < 2; ++k) {
+                for (let m = -1; m < 2; ++m) {
+                    if ( (k!=0 || m!=0) && tmpimdata[(j + k) * width + i + m] != tmpimdata[(j-1) * width + i -1]) {
+                        flag = 1
+                        break
+                    }
+                }
+                if (flag == 1) {
+                    break
+                }
+            }
+            if (flag == 0) {
+                imdata[j * width + i] = tmpimdata[(j-1) * width + i -1]
             }
         }
     }

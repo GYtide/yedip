@@ -661,9 +661,8 @@ function Iterativethresholdpartitioning(){
         }
         else{
             // 先将图像灰度化
-
-
-            
+            rgb2gray('mean')
+            Iterativethresholdpartitioning()
             
         }
     }
@@ -714,7 +713,7 @@ function Contourextraction(){
         }
         else{
              // 先将图像二值化
-             rgb2gray()
+             rgb2gray('mean')
              Iterativethresholdpartitioning()
              Contourextraction()
         }
@@ -730,6 +729,138 @@ function Contourextraction(){
  * 
  */
 
-function Horizontalcorrosion(){
+function corrosion(){
+    if(graphNow){
+        if(graphNow.type == 'bin'){
+            let cans = graphNow.getImage().getContext('2d')
 
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+            let tmpdata = []
+            // 取出灰度图的一个通道
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpdata[j] = imdata[i]
+            }
+
+            corros(tmpdata,cans.canvas.width,cans.canvas.height)
+
+            console.log(tmpdata)
+
+            // 写回原数组
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+               imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+            }
+            // 图像类型改为二值图像
+
+            // 画出直方图
+            clearHistogram()
+            let hisdata = histogramData(imdata)
+            // 画出灰度直方图
+            drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+
+        }
+        else{
+             // 先将图像二值化
+             rgb2gray('mean')
+             Iterativethresholdpartitioning()
+             corrosion()
+        }
+    }
+
+}
+
+/**
+ * 
+ * 
+ * Horizontalcorrosion 水平膨胀
+ * 
+ */
+
+function expansion(){
+    if(graphNow){
+        if(graphNow.type == 'bin'){
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+            let tmpdata = []
+            // 取出灰度图的一个通道
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpdata[j] = imdata[i]
+            }
+            // console.log(tmpdata)
+            expans(tmpdata,cans.canvas.width,cans.canvas.height)
+
+            // console.log(tmpdata)
+
+            // 写回原数组
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+               imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+            }
+            // 图像类型改为二值图像
+
+            // 画出直方图
+            clearHistogram()
+            let hisdata = histogramData(imdata)
+            // 画出灰度直方图
+            drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+
+        }
+        else{
+             // 先将图像二值化
+             rgb2gray('mean')
+             Iterativethresholdpartitioning()
+             corrosion()
+        }
+    }
+}
+
+/**
+ * 
+ * rmIsolatedPoints 消除鼓励点
+ * 
+ */
+
+function rmIsolatedPoints(){
+    if(graphNow && graphNow.type == 'bin'){
+ 
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+            let tmpdata = []
+            // 取出灰度图的一个通道
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpdata[j] = imdata[i]
+            }
+            // console.log(tmpdata)
+            rmisolatedpoint(tmpdata,cans.canvas.width,cans.canvas.height)
+
+            // console.log(tmpdata)
+
+            // 写回原数组
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+               imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+            }
+            // 图像类型改为二值图像
+
+            // 画出直方图
+            clearHistogram()
+            let hisdata = histogramData(imdata)
+            // 画出灰度直方图
+            drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+
+        }
 }
