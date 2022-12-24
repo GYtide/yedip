@@ -1,8 +1,35 @@
+
+/*
+*  设置滚动条样式 
+*/
+
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.2);
+    border-radius: 8px;
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: rgb(216, 233, 255);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.25);
+}
+/* 非激活窗口 */
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(216, 233, 255);
+}
+
 .wrapper {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px;
-    grid-auto-rows: minmax(90px, auto);
+    grid-auto-rows: minmax(70px, auto);
+
 }
 
 .tool {
@@ -26,7 +53,8 @@
     grid-column: 1;
     /* background: #D1BA74; */
     border-style: solid;
-    border-color: #2dbeea;
+    border-color: #0db4e7;
+    /* overflow-y: auto; */
 
     
 }

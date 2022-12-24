@@ -183,6 +183,15 @@ function drawHistogram(id, data, title, color, rangeNum) {
     rangeNum = 256
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById(id));
+
+    if(id == 'graychart'){
+        xfont =12,
+        yfont =12
+    }
+    else{
+        xfont = 10
+        yfont = 8
+    }
     // console.log(myChart)
     let ranges = new Array(rangeNum).fill(0), displayData = new Array(rangeNum).fill(0);
     let delt = Math.ceil(256 / rangeNum);
@@ -199,10 +208,29 @@ function drawHistogram(id, data, title, color, rangeNum) {
         },
         tooltip: {},//悬浮显示
         xAxis: {
-            data: ranges
+            data: ranges,
+            axisLabel: {
+                inside: false,
+                textStyle: {
+                    color: '#000',
+                    fontSize: xfont,
+                    itemSize:''
+                    
+                }
+            }
         },
         yAxis: {
-            type: "value",//y轴显示区间分量的个数
+            // textStyle:{fontSize: 13},
+            axisLabel: {
+                inside: false,
+                textStyle: {
+                    color: '#000',
+                    fontSize: yfont,
+                    itemSize:''
+                    
+                }
+            },
+
         },
         series: [{
             name: '个数',

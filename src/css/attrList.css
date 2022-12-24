@@ -92,6 +92,10 @@ input[type="radio"]:checked+label+div {
 .content {
     
     background-color: aliceblue;
+    height: calc(100vh - 150px); 
+    overflow-y: scroll;
+
+    /* overflow-y: auto; */
 }
         
 /* .content div {
@@ -119,7 +123,13 @@ input[type="radio"]:checked+label+div {
     /* margin: auto; */
     /* margin-left: 20px; */
     /* margin-right: 20px; */
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.content-input-range{
+    width: 260px;
+    height: 30px;
 }
 
 #hotRank:checked~.content>#content2,

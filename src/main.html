@@ -10,14 +10,15 @@
 <link rel="stylesheet" href="./css/index.css">
 <link rel="stylesheet" href="./css/attrList.css">
 
-<body>
+<body style="overflow:hidden">
     <div>
-
         <div class="wrapper">
             <div class="tool item">
                 <button class="toolbtn" onclick="importImage()">导入图片</button>
                 <button class="toolbtn" onclick="importlnImage('ln.BMP')">示例(莱娜图)</button>
                 <button class="toolbtn" onclick="importlnImage('chinamap.BMP')">示例(地图)</button>
+                <button class="toolbtn" onclick="importlnImage('1543.BMP')">示例(建筑)</button>
+                <button class="toolbtn" onclick="importlnImage('256car.BMP')">示例(车牌)</button>
                 <!-- <button onclick="flagFn(this,'pencil')">铅笔</button>
                 <button onclick="flagFn(this, 'rectH');">矩形框</button>
                 <button onclick="flagFn(this, 'ellipse');">椭圆-空心</button>
@@ -43,36 +44,54 @@
                 <div class="content">
                     <div id="content1">
                         <ul>
+
                             <li class="contentIndex">
                                 <label class="">鼠标位置</label>
                                 <br>
                                 <label class="attrContent">X :</label>
-                                <input id="mousex" type="text" value="" disabled class="attrinfo">
+                                <input id="mousex" type="text" style="text-align: center;" value="" disabled
+                                    class="attrinfo">
                                 <label class="attrContent">Y :</label>
-                                <input id="mousey" type="text" value="" disabled class="attrinfo">
+                                <input id="mousey" type="text" style="text-align: center;" value="" disabled
+                                    class="attrinfo">
 
                             </li>
                             <li class="contentIndex">
                                 <label class="">图形信息</label>
                                 <br>
-                                <label class="attrContent">ID :</label>
-                                <input id="bmpid" type="text" value="" disabled class="attrinfo">
-                                <label class="attrContent">INDEX:</label>
-                                <input id="bmpindex" type="text" value="" disabled class="attrinfo">
+                                <label class="attrContent">高度 :</label>
+                                <input id="bmpheight" type="text" style="text-align: center;" value="" disabled
+                                    class="attrinfo">
+                                <label class="attrContent">宽度 :</label>
+                                <input id="bmpwidth" type="text" style="text-align: center;" value="" disabled
+                                    class="attrinfo">
                             </li>
                             <li class="contentIndex">
                                 <label class="">图像位置</label>
                                 <br>
                                 <label class="attrContent">X :</label>
-                                <input id="bmpx" type="text" value="" disabled class="attrinfo">
+                                <input id="bmpx" type="text" style="text-align: center;" value="" disabled
+                                    class="attrinfo">
                                 <label class="attrContent">Y :</label>
-                                <input id="bmpy" type="text" value="" disabled class="attrinfo">
+                                <input id="bmpy" type="text" style="text-align: center;" value="" disabled
+                                    class="attrinfo">
                             </li>
                             <li class="contentIndex">
                                 <label class="">图像还原</label>
                                 <br>
                                 <button class="attrbtn" onclick="return2src()">还原为原图</button>
                                 <button class="attrbtn" onclick="return2gray('mean')">原图平均灰度化</button>
+                            </li>
+                            <li class="contentIndex">
+                                <label class="">几何变换</label>
+                                <br>
+                                缩放:
+                                <input id="Zoomratio" class="content-input-range" type="range" min="-2" max="2"
+                                    step="0.1" value="0" disabled />
+                                <br>
+
+                                <input id="Zoomratio1" style="text-align: center;" type="text" value="0" disabled />
+
                             </li>
                             <li class="contentIndex">
                                 <label class="">灰度变化</label>
@@ -115,9 +134,9 @@
                             <li class="contentIndex">
                                 <label class="attrchoice">使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
-                                    onclick="transformerOclick(this)" value="" class="attrinfo" >
+                                    onclick="transformerOclick(this)" value="" class="attrinfo">
                                 <div style="font-size: 10px;">
-                                   transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
+                                    transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
                                 </div>
                             </li>
 
@@ -271,14 +290,29 @@
     var mousex = document.getElementById('mousex')
     var mousey = document.getElementById('mousey')
 
-    //当前选中图形的 id
-    var bmpid = document.getElementById('bmpid')
-    //当前选中图形的 index （场上所有图像的相对顺序）
-    var bmpindex = document.getElementById('bmpindex')
+    //当前选中图形的 宽度
+    var bmpwidth = document.getElementById('bmpwidth')
+    //当前选中图形的 高度
+    var bmpheight = document.getElementById('bmpheight')
+
     // 当前选中图形的 坐标
 
     var bmpx = document.getElementById('bmpx')
     var bmpy = document.getElementById('bmpy')
+
+    // 缩放滚动条和数值显示
+    var Zoomratio = document.getElementById('Zoomratio')
+    var Zoomratio1 = document.getElementById('Zoomratio1')
+
+
+    // 缩放滚动条的监视
+
+    function Onzoom(event) {
+        console.log(event.target.value);
+    }
+
+
+
     function importImage() {
         let input = document.createElement('input');
         input.type = 'file';
@@ -290,7 +324,7 @@
                 return;
             }
             else {
-               
+
                 var imageObj = new Image();
                 imageObj.onload = function () {
                     drawImage(this)
@@ -298,7 +332,7 @@
                 try {
                     //读取文件
 
-                    imageObj.src =  file.path
+                    imageObj.src = file.path
                 } catch (err) {
                     console.log(err);
                     alert("文件读取失败")
@@ -354,8 +388,8 @@
         }
         aShape = stage.children[0].children
 
-        bmpid.value = ""
-        bmpindex.value = ""
+        bmpwidth.value = ""
+        bmpheight.value = ""
         bmpx.value = ""
         bmpy.value = ""
         // console.log(aShape)
@@ -397,21 +431,7 @@
 
             // 遍历移除图形选择框
             // stage.find('Transformer').destroy();
-
-            let trans = stage.find('Transformer')
-
-            for (let i = 0; i < trans.length; ++i) {
-                trans[i].destroy()
-            }
-            // 清空现在活动图形的信息
-            bmpid.value = ""
-            bmpindex.value = ""
-            bmpx.value = ""
-            bmpy.value = ""
-            graphNow = null
-            updateImageinfoPan()
-            clearHistogram()
-
+            unsetgraphNow()
             layer.draw();
             return;
         }
@@ -433,65 +453,96 @@
 
 
         // 当前点击的对象赋值给graphNow
+
+        unsetgraphNow()
         graphNow = e.target;
 
-        
+        setgraphNow()
+
+
         // console.log(catx)
-        
-        bmpid.value = graphNow._id
-        bmpindex.value = graphNow.index
-        
-        bmpx.value = graphNow.attrs.x
-        bmpy.value = graphNow.attrs.y
-        
-        // 创建该图形的直方图
-        updateImageinfoPan()
-        
-        clearHistogram()
-        let cans = graphNow.getImage().getContext('2d')
-        
-        let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
-        
-        let imdata = catx.data
-        console.log(graphNow)
-        console.log(imdata)
-        // console.log(cans.canvas.width)
-        // console.log(cans.canvas.height)
-        
-        let hisdata = histogramData(imdata)
 
-        if (graphNow.type == 'rgb') {
 
-            // console.log(hisdata)
-            drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
-            drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
-            drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
-        }
-        else {
-            // 画出灰度直方图
-            drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
-        }
-
-        // 移到最上面
-        
-        graphNow.moveToTop()
-
-        // 如果允许使用 Transformer 创建图形选框事件
-        if (!transformer.checked) {
-            return
-        }
-        const tr = new Konva.Transformer({
-            borderStroke: '#000', // 虚线颜色
-            borderStrokeWidth: 1, //虚线大小
-            borderDash: [5], // 虚线间距
-            keepRatio: false // 不等比缩放
-        });
-        layer.add(tr);
-        tr.attachTo(e.target);
         layer.draw();
     });
 
-    // 
+    // 设置当前图形
+
+    function setgraphNow() {
+        if (graphNow) {
+            console.log(graphNow)
+            graphNow.strokeWidth(5)
+            graphNow.moveToTop()
+            bmpwidth.value = graphNow._id
+            bmpheight.value = graphNow.index
+
+            bmpx.value = graphNow.attrs.x
+            bmpy.value = graphNow.attrs.y
+
+            updateImageinfoPan()
+            
+            // 创建该图形的直方图
+            clearHistogram()
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+
+            // console.log(cans.canvas.width)
+            // console.log(cans.canvas.height)
+
+            let hisdata = histogramData(imdata)
+
+            if (graphNow.type == 'rgb') {
+
+                // console.log(hisdata)
+                drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
+                drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
+                drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
+            }
+            else {
+                // 画出灰度直方图
+                drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+            }
+
+            // 移到最上面
+            // 如果允许使用 Transformer 创建图形选框事件
+            if (!transformer.checked) {
+                return
+            }
+            const tr = new Konva.Transformer({
+                borderStroke: '#000', // 虚线颜色
+                borderStrokeWidth: 1, //虚线大小
+                borderDash: [5], // 虚线间距
+                keepRatio: false // 不等比缩放
+            });
+
+            layer.add(tr);
+            tr.attachTo(graphNow);
+        }
+    }
+
+    // 设置当前图形为空
+    function unsetgraphNow() {
+        if (graphNow) {
+            let trans = stage.find('Transformer')
+
+            for (let i = 0; i < trans.length; ++i) {
+                trans[i].destroy()
+            }
+            // 清空现在活动图形的信息
+            graphNow.strokeWidth(0)
+            bmpwidth.value = ""
+            bmpheight.value = ""
+            bmpx.value = ""
+            bmpy.value = ""
+            graphNow = null
+            updateImageinfoPan()
+            clearHistogram()
+
+        }
+    }
 
     // 鼠标移动
     stage.on('mousemove', function (e) {
@@ -528,6 +579,8 @@
 
 
     }
+
+
 
 
     // 监控 checkbox 事件,如果转为不使用 transformer 状态，清除现有的 transformer 框

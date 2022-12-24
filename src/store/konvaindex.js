@@ -65,10 +65,18 @@ function drawImage(imageObj) {
         y: stage.height() / 2 - imageObj.height / 2,
         width: newImage.width,
         height: newImage.height,
-        draggable: true
+        draggable: true,
+        stroke: (223,222,222),
+        strokeWidth: 0,
+        dash: [10, 10],
     });
 
+    
+    
+    unsetgraphNow()
+
     graphNow = Img
+
     // console.log(Img._id)
 
 
@@ -80,13 +88,13 @@ function drawImage(imageObj) {
     }
 
     updateImageinfoPan()
+
+  
     // console.log(drawShape)
 
     // 添加属性 即各种图像处理后的像素矩阵,提前生成，方便替换 canvas 视图
 
     // 添加原图像
-
-
     Img.srcImage = imdata
 
     // 加权平均灰度化
@@ -101,14 +109,8 @@ function drawImage(imageObj) {
 
     // 画 RGB 直方图
     // 清空现有直方图
-    clearHistogram()
 
-    let hisdata = histogramData(imdata)
-
-    // console.log(hisdata)
-    drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
-    drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
-    drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
+    setgraphNow()
 
     Img.on('dragmove', function () {
 
@@ -128,7 +130,6 @@ function drawImage(imageObj) {
     let trans = stage.find('Transformer')
 
     for (let i = 0; i < trans.length; ++i) {
-
         trans[i].destroy()
     }
 
@@ -161,8 +162,8 @@ function drawImage(imageObj) {
         }
 
         // 移除选中信息
-        bmpid.value = ""
-        bmpindex.value = ""
+        bmpwidth.value = ""
+        bmpheight.value = ""
         bmpx.value = ""
         bmpy.value = ""
 
@@ -173,9 +174,8 @@ function drawImage(imageObj) {
         clearHistogram()
 
         layer.draw();
+    
     });
-
-
     // console.log(p.bmpFile)
 
 }
