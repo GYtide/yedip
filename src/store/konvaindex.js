@@ -24,17 +24,14 @@ function drawImage(imageObj) {
     
     var newFile = newFileloader.getFile()
 
-    // console.log(newFile)
 
     var newImage = newFile.getImage()
 
-    console.log(newImage)
 
     // 为了使用像素进行自定义操作，使用 canvas 作为子容器承载 Image dom
     var canvas = document.createElement('canvas');
     canvas.width = newImage.width
     canvas.height = newImage.height
-    console.log(canvas.width, canvas.height)
     var ctx = canvas.getContext('2d');
 
     
@@ -57,24 +54,56 @@ function drawImage(imageObj) {
 
     ctx.putImageData(catx, 0, 0)
 
+    let newwidth = newImage.width
+    let srcwidth = newImage.width
+    let newheight = newImage.height
+    let srcheight = newImage.height
+    let zoomRatio = 1
 
+    if(newwidth > stage.width()*0.7 || newheight > stage.height()*0.7){
+        // 缩放
+        console.log(Math.floor( stage.width()*0.7/newwidth * 10 )/10 , Math.floor(stage.height()*0.7/newheight * 10)/10)
+        // 确定缩放比例，
+        if(Math.floor( stage.width()*0.7/newwidth * 10 )/10 < Math.floor(stage.height()*0.7/newheight * 10)/10){
+            zoomRatio = Math.floor(  stage.width()*0.7/newwidth * 10 )/10
+        }
+        else{
+            zoomRatio = Math.floor( stage.height()*0.7/newheight * 10)/10
+        }
+
+    }
+
+    // 进行缩放
+    console.log(zoomRatio)
+    if(zoomRatio <= 0.3 ){
+        alert ('图片过大无法正常显示')
+        return
+    }
+    newwidth *= zoomRatio
+    newheight *= zoomRatio
+
+    
+    
     var Img = new Konva.Image({
         name: 'image',
         image: canvas,
-        x: stage.width() / 2 - imageObj.width / 2,
-        y: stage.height() / 2 - imageObj.height / 2,
-        width: newImage.width,
-        height: newImage.height,
+        x: stage.width() / 2 - newwidth / 2,
+        y: stage.height() / 2 - newheight / 2,
+        width: newwidth,
+        height: newheight,
         draggable: true,
         stroke: (223,222,222),
         strokeWidth: 0,
         dash: [10, 10],
     });
-
+    
     
     
     unsetgraphNow()
-
+    Img.zoomRatio = zoomRatio
+    Img.srcwidth = srcwidth
+    Img.srcheight = srcheight
+    
     graphNow = Img
 
     // console.log(Img._id)
@@ -168,10 +197,7 @@ function drawImage(imageObj) {
         bmpy.value = ""
 
         // 双击时 graphNow 必然是 this
-        graphNow = null
-        updateImageinfoPan()
-        // 清空直方图
-        clearHistogram()
+        unsetgraphNow()
 
         layer.draw();
     
@@ -601,7 +627,6 @@ function Meanvaluefiltering() {
             // console.log(tmpdata)
             Meanvaluefilter(tmpdata, cans.canvas.width, cans.canvas.height)
 
-            console.log(tmpdata)
 
 
             // 写回原数组
@@ -690,7 +715,6 @@ function Medianvaluefiltering() {
             // console.log(tmpdata)
             Medianvaluefilter(tmpdata, cans.canvas.width, cans.canvas.height)
 
-            console.log(tmpdata)
 
 
             // 写回原数组

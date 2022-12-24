@@ -86,8 +86,8 @@
                                 <label class="">几何变换</label>
                                 <br>
                                 缩放:
-                                <input id="Zoomratio" class="content-input-range" type="range" min="-2" max="2"
-                                    step="0.1" value="0" disabled />
+                                <input id="Zoomratio" class="content-input-range" type="range" min="0.1" max="2"
+                                    step="0.1" value="0" disabled oninput="change2()" onchange="change2()" />
                                 <br>
 
                                 <input id="Zoomratio1" style="text-align: center;" type="text" value="0" disabled />
@@ -131,7 +131,8 @@
                                 <button class="attrbtn" onclick="expansion()">膨胀</button>
                                 <button class="attrbtn" onclick="rmIsolatedPoints()">孤立点去除</button>
                             </li>
-                            <li class="contentIndex">
+
+                            <li style="visibility: hidden;">
                                 <label class="attrchoice">使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
                                     onclick="transformerOclick(this)" value="" class="attrinfo">
@@ -301,15 +302,35 @@
     var bmpy = document.getElementById('bmpy')
 
     // 缩放滚动条和数值显示
-    var Zoomratio = document.getElementById('Zoomratio')
-    var Zoomratio1 = document.getElementById('Zoomratio1')
+    var zoomratio = document.getElementById('Zoomratio')
+    var zoomratio1 = document.getElementById('Zoomratio1')
+
 
 
     // 缩放滚动条的监视
+    function change2(){
+  
+        zoomratio1.value = zoomratio.value
+        if(graphNow){
+            graphNow.zoomRatio = Zoomratio.value
+            graphNow.width(graphNow()* graphNow.zoomRadio)
+            console.log(graphNow.zoomRadio)
 
-    function Onzoom(event) {
-        console.log(event.target.value);
+
+        }
+
     }
+ 
+    function change2(){
+        zoomratio1.value = zoomratio.value
+        if(graphNow){
+            graphNow.zoomRatio = zoomratio.value
+            graphNow.width(graphNow.srcwidth *graphNow.zoomRatio)
+            graphNow.height(graphNow.srcheight*graphNow.zoomRatio)
+        }
+    }
+
+
 
 
 
@@ -470,6 +491,9 @@
 
     function setgraphNow() {
         if (graphNow) {
+            Zoomratio.disabled = false
+            Zoomratio1.value = graphNow.zoomRatio
+            Zoomratio.value = graphNow.zoomRatio
             console.log(graphNow)
             graphNow.strokeWidth(5)
             graphNow.moveToTop()
@@ -480,7 +504,7 @@
             bmpy.value = graphNow.attrs.y
 
             updateImageinfoPan()
-            
+
             // 创建该图形的直方图
             clearHistogram()
             let cans = graphNow.getImage().getContext('2d')
@@ -526,6 +550,10 @@
     // 设置当前图形为空
     function unsetgraphNow() {
         if (graphNow) {
+
+            Zoomratio.disabled = true
+            Zoomratio1.disabled = true
+
             let trans = stage.find('Transformer')
 
             for (let i = 0; i < trans.length; ++i) {

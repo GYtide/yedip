@@ -32,7 +32,7 @@ class FileParser {
         // 根据文件头里的位图数据偏移量计算出实际像素数组的位置
         let bitMapData = fileBitStream.slice(Header.bfOffBits,)
         var datalength = Info.biHeight * Info.biWidth * Info.biBitCount / 8
-        console.log("bitMaplength", bitMapData.length, 'HxW/8:', datalength)
+  
         let mapData = []
 
         //     // 根据信息头的颜色数判断是否有调色板 
@@ -50,7 +50,7 @@ class FileParser {
             } else {
 
             }
-            console.log(Info.biHeight, Info.biWidth, newWidth)
+       
             for (let j = 0; j < Info.biHeight; ++j) {
 
                 for (let i = 0; i < newWidth; ++i) {
@@ -76,7 +76,7 @@ class FileParser {
             } else {
 
             }
-            console.log(Info.biHeight,Info.biWidth,newWidth)
+
             for (let j = 0; j < Info.biHeight; ++j) {
 
                 for (let i = 0; i < newWidth ; i+=3) {
@@ -93,7 +93,7 @@ class FileParser {
                 }
 
             }
-            console.log(mapData.length)
+     
 
         }
         else{
