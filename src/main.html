@@ -95,7 +95,7 @@
                             <li class="contentIndex">
                                 <label class="">分割测量</label>
                                 <br>
-                                <button class="attrbtn" onclick="rgb2gray()">迭代阈值分割</button>
+                                <button class="attrbtn" onclick="Iterativethresholdpartitioning()">迭代阈值分割</button>
                                 <button class="attrbtn" onclick="rgb2gray('mean')">边界分割</button>
                             </li>
                             <li class="contentIndex">
@@ -109,7 +109,7 @@
                             <li class="contentIndex">
                                 <label class="attrchoice">使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
-                                    onclick="transformerOclick(this)" value="" class="attrinfo" checked="checked">
+                                    onclick="transformerOclick(this)" value="" class="attrinfo" >
                                 <div style="font-size: 10px;">
                                    transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
                                 </div>

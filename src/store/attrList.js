@@ -139,7 +139,7 @@ function drawHistogram(id, data, title, color, rangeNum) {
 
 function Equalization() {
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -159,8 +159,9 @@ function Equalization() {
             layer.draw();
         }
         else{
-            // 不是灰度图先进行灰度化
+            // 不是灰度图对三个通道分别进行均衡化
             rgb2gray()
+
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -187,7 +188,7 @@ function Equalization() {
 
 function Horizontalsharpening(){
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -277,7 +278,7 @@ function Horizontalsharpening(){
 
 function Sobelsharpening(){
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -367,7 +368,7 @@ function Sobelsharpening(){
 
 function Horizontalenchasing(){
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -452,7 +453,7 @@ function Horizontalenchasing(){
 
 function LOGsharpening(){
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -519,6 +520,101 @@ function LOGsharpening(){
                 imdata[i+1] = tmpgdata[j]
                 imdata[i+2] = tmpbdata[j]
              }
+            // 画出直方图
+            clearHistogram()
+            let hisdata = histogramData(imdata)
+            // 画出灰度直方图
+            drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
+            drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
+            drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
+    
+
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+        }
+    }
+}
+
+
+/**
+ * 
+ * Iterativethresholdpartitioning 迭代阈值分割
+ * 
+ */
+
+function Iterativethresholdpartitioning(){
+    if (graphNow) {
+        if (graphNow.type == 'gray' ||graphNow.type == 'bin') {
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+            let tmpdata = []
+            // 取出灰度图的一个通道
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpdata[j] = imdata[i]
+            }
+            // console.log(tmpdata)
+            Iterativethresholdpart(tmpdata)
+
+            // console.log(tmpdata)
+
+
+            // 写回原数组
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+               imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
+            }
+            // 图像类型改为二值图像
+
+            graphNow.type = 'bin'
+
+            // 画出直方图
+            clearHistogram()
+            let hisdata = histogramData(imdata)
+            // 画出灰度直方图
+            drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+        }
+        else{
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+
+            // 取出每一个通道的数据分别进行滤波
+
+            let tmprdata = []
+            // 取出R通道
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmprdata[j] = imdata[i]
+            }
+            let tmpgdata = []
+            // 取出G通道
+            for(let i = 1 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpgdata[j] = imdata[i]
+            }
+            let tmpbdata = []
+            // 取出B通道
+            for(let i = 2 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                tmpbdata[j] = imdata[i]
+            }
+
+            Iterativethresholdpart(tmprdata)
+            Iterativethresholdpart(tmpgdata)
+            Iterativethresholdpart(tmpbdata)
+
+            // 写回源数组
+
+            for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
+                imdata[i] = tmprdata[j]
+                imdata[i+1] = tmpgdata[j]
+                imdata[i+2] = tmpbdata[j]
+             }
+            graphNow.type = 'bin'
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)

@@ -451,7 +451,7 @@ function updateImageinfoPan() {
 
 function addGaussiannoise() {
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -540,7 +540,7 @@ function addGaussiannoise() {
 
 function addPretzelnoise() {
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -587,7 +587,7 @@ function addPretzelnoise() {
 
 function Meanvaluefiltering() {
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
@@ -676,7 +676,7 @@ function Meanvaluefiltering() {
 
 function Medianvaluefiltering() {
     if (graphNow) {
-        if (graphNow.type == 'gray') {
+        if (graphNow.type == 'gray' || graphNow.type == 'bin') {
             let cans = graphNow.getImage().getContext('2d')
 
             let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)

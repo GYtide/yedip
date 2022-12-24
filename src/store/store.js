@@ -94,7 +94,6 @@ function histogramData(imdata) {
  * 
 */
 function HistogramEqualization(imdata) {
-    // 计算直方图,使用时已经灰度化,使用任意 RGB 值作为灰度值
 
 
     var hist = histogramData(imdata).rNumber
@@ -485,5 +484,75 @@ function Horizontalenchase(imdata, width, height) {
  * @param height 图像高度
  */
 function LOGsharpe(imdata,width,height){
+    
+}
+
+
+/**
+ * Iterativethresholdpart 迭代阈值分割
+ * @param imdata 原始像素数组
+ * 
+ * 使用全部数据的平均值作为初始阈值,分割后将两个部分的均值的平均值作为
+ * 新的阈值继续分割，直到阈值不再变化或者差小于某一设定值
+ */
+
+
+function Iterativethresholdpart(imdata){
+    
+    // 用于范围内计算均值
+    function datamean(data,dmin,dmax){
+        let sum = 0;
+        let num = 0;
+
+        for(let i =0 ; i < data.length ;++i){
+            if(data[i]>dmin && data[i]<=dmax){
+                sum += data[i]
+                num +=1
+
+            }
+            else{
+                continue
+            }
+        }
+        // 计算均值
+
+        let mean = sum/num
+        return mean
+    }
+
+    let T = datamean(imdata,-1,255) //总体均值
+
+    while(true){
+
+        // 迭代阈值分割
+
+        let T1 = datamean(imdata,-1,T)
+        let T2 = datamean(imdata,T,255)
+
+        let Tn = (T1 + T2) /2
+
+        if(Math.abs(Tn - T) < 0.5){
+            T = Tn 
+            console.log('T',T,'Tn',Tn)
+            break
+        }
+        else{
+            T = Tn 
+            console.log('T',T,'Tn',Tn)
+            continue
+        }
+
+    }
+
+    // 根据迭代出的阈值进行分割
+
+    for(let i = 0 ; i < imdata.length ;++i){
+        if(imdata[i]>T){
+            imdata[i] = 255
+        }
+        else{
+            imdata[i] = 0
+        }
+    }
     
 }
