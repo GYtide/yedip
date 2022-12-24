@@ -127,18 +127,18 @@ function HistogramEqualization(imdata) {
  */
 
 
-function gauss(width,height,mathExpe,variance) {
+function gauss(width, height, mathExpe, variance) {
 
     var gaussmap = []
 
-    for(let i = 0 ; i < width*height ;++i){
-        let A = Math.sqrt((-2)*Math.log(Math.random()))
+    for (let i = 0; i < width * height; ++i) {
+        let A = Math.sqrt((-2) * Math.log(Math.random()))
 
-        let B = 2*Math.PI*Math.random()
-    
-        let C = A*Math.cos(B) 
+        let B = 2 * Math.PI * Math.random()
 
-        r = mathExpe + C*variance
+        let C = A * Math.cos(B)
+
+        r = mathExpe + C * variance
         gaussmap[i] = Math.round(r)
     }
 
@@ -155,18 +155,18 @@ function gauss(width,height,mathExpe,variance) {
  * @param variance 方差
  */
 
-function Gaussiannoise(imdata,width,height,mathExpe,variance) {
+function Gaussiannoise(imdata, width, height, mathExpe, variance) {
 
-    var gaussMap = gauss(width,height,mathExpe,variance)
-    
+    var gaussMap = gauss(width, height, mathExpe, variance)
+
     // 将噪声加到原图像上
-    for(let i = 0; i < width*height ; ++i){
+    for (let i = 0; i < width * height; ++i) {
         imdata[i] += gaussMap[i]
 
-        if(imdata[i]>255){
+        if (imdata[i] > 255) {
             imdata[i] = 255
         }
-        else if(imdata[i]<0){
+        else if (imdata[i] < 0) {
             imdata[i] = 0
         }
 
@@ -243,8 +243,8 @@ function Meanvaluefilter(imdata, width, height) {
             averg = Math.round((imdata[(j - 1) * width + (i - 1)] + imdata[(j - 1) * width + i]
                 + imdata[(j - 1) * width + (i + 1)] + imdata[j * width + (i - 1)]
                 + imdata[j * width + i + 1] + imdata[(j + 1) * width + (i - 1)]
-                + imdata[(j + 1) * width + i] + imdata[(j + 1) * width + i + 1] 
-                + imdata[j * width + i])/ 9);
+                + imdata[(j + 1) * width + i] + imdata[(j + 1) * width + i + 1]
+                + imdata[j * width + i]) / 9);
             imdata[j * width + i] = averg;
         }
     }
@@ -419,7 +419,7 @@ function Sobelsharpe(imdata, width, height) {
             // D1  =  1  0 -1
             //        2  0 -2
             //        1  0 -1
-            
+
             d1 = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 0 +
                 tmpimdata[(j - 1) * width + (i + 1)] * (-1) + tmpimdata[j * width + (i - 1)] * 2
                 + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * (-2) + tmpimdata[(j + 1) * width + (i - 1)] * 1
@@ -430,14 +430,14 @@ function Sobelsharpe(imdata, width, height) {
             //     -1 -2 -1
 
             d2 = tmpimdata[(j - 1) * width + (i - 1)] * 1 + tmpimdata[(j - 1) * width + i] * 2 +
-            tmpimdata[(j - 1) * width + (i + 1)] * 1 + tmpimdata[j * width + (i - 1)] * 0
-            + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * 0 + tmpimdata[(j + 1) * width + (i - 1)] * (-1)
-            + tmpimdata[(j + 1) * width + i] * (-2) + tmpimdata[(j + 1) * width + i + 1] * (-1)
+                tmpimdata[(j - 1) * width + (i + 1)] * 1 + tmpimdata[j * width + (i - 1)] * 0
+                + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * 0 + tmpimdata[(j + 1) * width + (i - 1)] * (-1)
+                + tmpimdata[(j + 1) * width + i] * (-2) + tmpimdata[(j + 1) * width + i + 1] * (-1)
 
 
-            newdata = Math.round( Math.sqrt(d1*d1 + d2*d2))
+            newdata = Math.round(Math.sqrt(d1 * d1 + d2 * d2))
 
-            if(newdata > 255){
+            if (newdata > 255) {
                 newdata = 255
             }
 
@@ -469,8 +469,8 @@ function Horizontalenchase(imdata, width, height) {
 
     for (let j = 0; j < height; ++j) {
         for (let i = 1; i < width; ++i) {
-            
-            imdata[j * width + i] =  tmpdata[j * width + i] - tmpdata[j * width + i - 1] +128
+
+            imdata[j * width + i] = tmpdata[j * width + i] - tmpdata[j * width + i - 1] + 128
         }
     }
 
@@ -483,8 +483,8 @@ function Horizontalenchase(imdata, width, height) {
  * @param width 图像宽度
  * @param height 图像高度
  */
-function LOGsharpe(imdata,width,height){
-    
+function LOGsharpe(imdata, width, height) {
+
 }
 
 
@@ -497,48 +497,48 @@ function LOGsharpe(imdata,width,height){
  */
 
 
-function Iterativethresholdpart(imdata){
-    
+function Iterativethresholdpart(imdata) {
+
     // 用于范围内计算均值
-    function datamean(data,dmin,dmax){
+    function datamean(data, dmin, dmax) {
         let sum = 0;
         let num = 0;
 
-        for(let i =0 ; i < data.length ;++i){
-            if(data[i]>dmin && data[i]<=dmax){
+        for (let i = 0; i < data.length; ++i) {
+            if (data[i] > dmin && data[i] <= dmax) {
                 sum += data[i]
-                num +=1
+                num += 1
 
             }
-            else{
+            else {
                 continue
             }
         }
         // 计算均值
 
-        let mean = sum/num
+        let mean = sum / num
         return mean
     }
 
-    let T = datamean(imdata,-1,255) //总体均值
+    let T = datamean(imdata, -1, 255) //总体均值
 
-    while(true){
+    while (true) {
 
         // 迭代阈值分割
 
-        let T1 = datamean(imdata,-1,T)
-        let T2 = datamean(imdata,T,255)
+        let T1 = datamean(imdata, -1, T)
+        let T2 = datamean(imdata, T, 255)
 
-        let Tn = (T1 + T2) /2
+        let Tn = (T1 + T2) / 2
 
-        if(Math.abs(Tn - T) < 0.5){
-            T = Tn 
-            console.log('T',T,'Tn',Tn)
+        if (Math.abs(Tn - T) < 0.5) {
+            T = Tn
+            console.log('T', T, 'Tn', Tn)
             break
         }
-        else{
-            T = Tn 
-            console.log('T',T,'Tn',Tn)
+        else {
+            T = Tn
+            console.log('T', T, 'Tn', Tn)
             continue
         }
 
@@ -546,13 +546,57 @@ function Iterativethresholdpart(imdata){
 
     // 根据迭代出的阈值进行分割
 
-    for(let i = 0 ; i < imdata.length ;++i){
-        if(imdata[i]>T){
+    for (let i = 0; i < imdata.length; ++i) {
+        if (imdata[i] > T) {
             imdata[i] = 255
         }
-        else{
+        else {
             imdata[i] = 0
         }
     }
-    
+
+}
+
+
+
+/**
+ * Contourextract 轮廓提取
+ * @param imdata 原始像素数组
+ * @param width 图像宽度
+ * @param height 图像高度
+ * 如果每一个邻域像素的灰度值和中心点的灰度值不相同，则认为邻域像素和中心点相同。
+ * 如果8个邻域像素都和中心点相同，将该像素点置白，否则保持不变。使用前需先将图像二值化
+ */
+
+function Contourextract(imdata, width, height) {
+
+    var tmpimdata = []
+    // 复刻一个数组
+    for (let i = 0; i < imdata.length; ++i) {
+        tmpimdata[i] = imdata[i]
+    }
+
+
+    for (let j = 1; j < height - 1; ++j) {
+        for (let i = 1; i < width - 1; ++i) {
+            
+            let flag = 0 //是否相同,0为相同
+            for(let k = -1 ; k < 2 ; ++k){
+                for( let m = -1 ; m < 2 ;++m){
+                    if(tmpimdata[(j+k)*width + i + m] != imdata[j*width + i]){
+                        flag = 1
+                        break
+                    }
+                }
+                if( flag == 1){
+                    break
+                }
+            }
+            if(flag == 0){
+                imdata[j*width + i] = 255
+            }
+        }
+    }
+
+
 }
