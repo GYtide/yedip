@@ -39,10 +39,11 @@ app.on('window-all-closed', function () {
     Menu.setApplicationMenu(null)
   
     // 加载应用的 index.html , node的vue页面服务器
-    mainWindow.loadURL('E:/_todo/dip_expe/yedip/src/main.html')
+    mainWindow.loadURL(path.join(path.resolve(__dirname),'main.html'))
     mainWindow.loadURL('')
     // mainWindow.loadURL('http://43.143.182.88:3002/?token=dbcad706-e788-4159-9ace-7d8a8e1b03dc')
     mainWindow.webContents.openDevTools({ mode: 'detach' });
+ 
   
     // 打开开发工具
     // mainWindow.openDevTools();

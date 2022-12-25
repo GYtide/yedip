@@ -312,11 +312,10 @@
   
         zoomratio1.value = zoomratio.value
         if(graphNow){
-            graphNow.zoomRatio = Zoomratio.value
-            graphNow.width(graphNow()* graphNow.zoomRadio)
-            console.log(graphNow.zoomRadio)
-
-
+            graphNow.zoomRatio = zoomratio.value
+            graphNow.width(graphNow.srcwidth *graphNow.zoomRatio)
+            graphNow.height(graphNow.srcheight*graphNow.zoomRatio)
+            setgraphNow()
         }
 
     }
@@ -327,6 +326,7 @@
             graphNow.zoomRatio = zoomratio.value
             graphNow.width(graphNow.srcwidth *graphNow.zoomRatio)
             graphNow.height(graphNow.srcheight*graphNow.zoomRatio)
+            setgraphNow()
         }
     }
 
@@ -497,8 +497,8 @@
             console.log(graphNow)
             graphNow.strokeWidth(5)
             graphNow.moveToTop()
-            bmpwidth.value = graphNow._id
-            bmpheight.value = graphNow.index
+            bmpwidth.value = Math.floor( graphNow.width())
+            bmpheight.value = Math.floor( graphNow.height())
 
             bmpx.value = graphNow.attrs.x
             bmpy.value = graphNow.attrs.y
