@@ -327,6 +327,8 @@ function Medianvaluefilter(imdata, width, height) {
 function Horizontalsharpe(imdata, width, height) {
 
     var tmpimdata = []
+
+    console.log(imdata, width, height)
     // 复刻一个数组
     for (let i = 0; i < imdata.length; ++i) {
         tmpimdata[i] = imdata[i]
@@ -356,7 +358,7 @@ function Horizontalsharpe(imdata, width, height) {
                 + tmpimdata[j * width + i] * 0 + tmpimdata[j * width + i + 1] * 0 + tmpimdata[(j + 1) * width + (i - 1)] * (-1)
                 + tmpimdata[(j + 1) * width + i] * (-2) + tmpimdata[(j + 1) * width + i + 1] * (-1)
 
-            imdata[j * height + i] = newdata;
+            imdata[j * width + i] = newdata;
 
             // console.log(newdata)s
         }
@@ -499,9 +501,57 @@ function Horizontalenchase(imdata, width, height) {
  * @param imdata 原始像素数组
  * @param width 图像宽度
  * @param height 图像高度
+ * 
+ * 使用以下近似卷积核
+ *  -2 -4 -4 -4 -2
+ *  -4  0  8  0 -4
+ *  -4  8 24  8 -4
+ *  -4  0  8  0 -4
+ *  -2 -4 -4 -4 -2 
+ * 
  */
 function LOGsharpe(imdata, width, height) {
+    var tmpimdata = []
+    // 复刻一个数组
+    for (let i = 0; i < imdata.length; ++i) {
+        tmpimdata[i] = imdata[i]
+    }
 
+    for (let j = 2; j < height - 2; ++j) {
+        for (let i = 2; i < width - 2; ++i) {
+            averg = 0;
+            //  -2 -4 -4 -4 -2
+            //  -4  0  8  0 -4
+            //  -4  8 24  8 -4
+            //  -4  0  8  0 -4
+            //  -2 -4 -4 -4 -2 
+
+            let d1 = [-2, -4, -4, -4, -2,
+            -4, 0, 8, 0, -4,
+            -4, 8, 24, 8, -4,
+            -4, 0, 8, 0, -4,
+            -2, -4, -4, -4, -2]
+            let newdata = 0
+
+            for (let k = -2; k < 3; ++k) {
+                for (let w = -2; w < 3; ++w) {
+
+                    newdata += tmpimdata[(j + k) * width + i + w] * d1[(k+2)*5 + (w+2)]
+
+                }
+            }
+
+            if (newdata > 255) {
+                newdata = 255
+            } else if (newdata < 0) {
+                newdata = 0
+            }
+
+            // console.log(newdata)
+            imdata[j * width + i] = newdata
+        }
+    }
+    return true;
 }
 
 
@@ -644,8 +694,8 @@ function corros(imdata, width, height) {
                 == 255 && tmpimdata[(j + 1) * width + i] == 255 && tmpimdata[(j + 1) * width + i + 1] == 255) {
                 imdata[j * width + i] = 255
             }
-            else{
-                imdata[j*width + i] = 0
+            else {
+                imdata[j * width + i] = 0
             }
 
         }
@@ -680,8 +730,8 @@ function expans(imdata, width, height) {
                 == 255 || tmpimdata[(j + 1) * width + i] == 255 || tmpimdata[(j + 1) * width + i + 1] == 255) {
                 imdata[j * width + i] = 255
             }
-            else{
-                imdata[j*width + i] = 0
+            else {
+                imdata[j * width + i] = 0
             }
 
         }
@@ -698,7 +748,7 @@ function expans(imdata, width, height) {
  * 如果八邻域全是 255 则为 255 全是 0 则是 0
  */
 
-function rmisolatedpoint(imdata,width,height){
+function rmisolatedpoint(imdata, width, height) {
     var tmpimdata = []
     // 复刻一个数组
     for (let i = 0; i < imdata.length; ++i) {
@@ -712,7 +762,7 @@ function rmisolatedpoint(imdata,width,height){
             let flag = 0 //是否相同,0为相同
             for (let k = -1; k < 2; ++k) {
                 for (let m = -1; m < 2; ++m) {
-                    if ( (k!=0 || m!=0) && tmpimdata[(j + k) * width + i + m] != tmpimdata[(j-1) * width + i -1]) {
+                    if ((k != 0 || m != 0) && tmpimdata[(j + k) * width + i + m] != tmpimdata[(j - 1) * width + i - 1]) {
                         flag = 1
                         break
                     }
@@ -722,7 +772,7 @@ function rmisolatedpoint(imdata,width,height){
                 }
             }
             if (flag == 0) {
-                imdata[j * width + i] = tmpimdata[(j-1) * width + i -1]
+                imdata[j * width + i] = tmpimdata[(j - 1) * width + i - 1]
             }
         }
     }
