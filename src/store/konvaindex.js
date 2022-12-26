@@ -139,69 +139,102 @@ function drawImage(imageObj) {
     // 画 RGB 直方图
     // 清空现有直方图
 
-    setgraphNow()
-
+    
     Img.on('dragmove', function () {
-
+        
         bmpx.value = this.attrs.x
         bmpy.value = this.attrs.y
     })
-
+    
     Img.on('mouseover', function () {
         document.body.style.cursor = 'pointer';
     });
-
+    
     Img.on('mouseout', function () {
         document.body.style.cursor = 'default';
     });
     layer.add(Img);
-
+    
     let trans = stage.find('Transformer')
-
+    
     for (let i = 0; i < trans.length; ++i) {
         trans[i].destroy()
     }
-
+    
+    setgraphNow()
 
     // 添加 tansformer
-    if (transformer.checked) {
-        const tr = new Konva.Transformer({
-            borderStroke: '#000', // 虚线颜色
-            borderStrokeWidth: 1, //虚线大小
-            borderDash: [5], // 虚线间距
-            keepRatio: false // 不等比缩放
-        });
-        layer.add(tr);
-        tr.attachTo(Img);
+    // if (transformer.checked) {
+    //     const tr = new Konva.Transformer({
+    //         borderStroke: '#000', // 虚线颜色
+    //         borderStrokeWidth: 1, //虚线大小
+    //         borderDash: [5], // 虚线间距
+    //         keepRatio: false // 不等比缩放
+    //     });
+    //     layer.add(tr);
+    //     tr.attachTo(Img);
 
-    }
+    // }
 
     layer.draw();
-    Img.on('dblclick', function () {
-        // 双击删除自己
-        this.remove();
-        // 遍历移除图形选择框
-        // stage.find('Transformer').destroy();
 
-        let trans = stage.find('Transformer')
-
-        for (let i = 0; i < trans.length; ++i) {
-
-            trans[i].destroy()
+    Img.on('contextmenu',function(e){
+        menuNode.style.display = 'none';
+        imagemenuNode.style.display = 'none'
+     
+        if (e.target.name() == 'image') {
+            e.evt.preventDefault();
+   
+            imagemenuNode.style.display = 'initial';
+            var containerRect = stage.container().getBoundingClientRect();
+            imagemenuNode.style.top =
+                containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+                imagemenuNode.style.left =
+                containerRect.left + stage.getPointerPosition().x + 4 + 'px';
         }
+    })
 
-        // 移除选中信息
-        bmpwidth.value = ""
-        bmpheight.value = ""
-        bmpx.value = ""
-        bmpy.value = ""
+    // Img.on('dblclick',function(e){
+    //     menuNode.style.display = 'none';
+    //     imagemenuNode.style.display = 'none'
+     
+    //     if (e.target.name() == 'image') {
+    //         e.evt.preventDefault();
+    //         console.log(e)
+   
+    //         imagemenuNode.style.display = 'initial';
+    //         var containerRect = stage.container().getBoundingClientRect();
+    //         imagemenuNode.style.top =
+    //             containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+    //             imagemenuNode.style.left =
+    //             containerRect.left + stage.getPointerPosition().x + 4 + 'px';
+    //     }
+    // })
+    // Img.on('dblclick', function () {
+    //     // 双击删除自己
+    //     this.remove();
+    //     // 遍历移除图形选择框
+    //     // stage.find('Transformer').destroy();
 
-        // 双击时 graphNow 必然是 this
-        unsetgraphNow()
+    //     let trans = stage.find('Transformer')
 
-        layer.draw();
+    //     for (let i = 0; i < trans.length; ++i) {
+
+    //         trans[i].destroy()
+    //     }
+
+    //     // 移除选中信息
+    //     bmpwidth.value = ""
+    //     bmpheight.value = ""
+    //     bmpx.value = ""
+    //     bmpy.value = ""
+
+    //     // 双击时 graphNow 必然是 this
+    //     unsetgraphNow()
+
+    //     layer.draw();
     
-    });
+    // });
     // console.log(p.bmpFile)
 
 }

@@ -1,177 +1,122 @@
+
 <!DOCTYPE html>
 <html>
+  <head>
+    <script src="../../lib/konva/konva.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Context Menu Demo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #f0f0f0;
+      }
 
-<head>
-  <script src="../../lib/konva/konva.js"></script>
-  <script src="../../lib/echarts/echarts.min.js"></script>
-  <meta charset="utf-8" />
-  <title>Konva Native Context Demo</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background-color: #f0f0f0;
-    }
+      #menu {
+        display: none;
+        position: absolute;
+        width: 60px;
+        background-color: white;
+        box-shadow: 0 0 5px grey;
+        border-radius: 3px;
+      }
 
-    h1 {
-      text-align: center;
-    }
-
-    p {
-      float: right;
-    }
-
-    #myCanvas {
-      display: block;
-      margin: 0 auto;
-    }
-
-    .container {
-      display: flex;
-      width: 100%;
-      flex-wrap: wrap;
-    }
-
-    @media screen and (min-width:300px) {
-      .echart-box {
+      #menu button {
         width: 100%;
-        height: 500px;
+        background-color: white;
+        border: none;
+        margin: 0;
+        padding: 10px;
       }
-    }
 
-    @media screen and (min-width:768px) {
-      .echart-box {
-        width: 45%;
-        height: 500px;
+      #menu button:hover {
+        background-color: lightgray;
       }
-    }
+    </style>
+  </head>
 
-    @media screen and (min-width:1024px) {
-      .echart-box {
-        width: 30%;
-        height: 300px;
-      }
-    }
-  </style>
-</head>
+  <body>
+    <div id="container"></div>
+    <div id="menu">
+      <div>
+        <button id="pulse-button">Pulse</button
+        ><button id="delete-button">Delete</button>
+      </div>
+    </div>
+    <script>
+      var width = window.innerWidth;
+      var height = window.innerHeight;
 
-<body>
-  <div id="container"></div>
-  <div class="container">
-    <div class="echart-box" id="rchart" ></div>
-    <div class="echart-box" id="gchart" style="display: inline;"></div>
-    <div class="echart-box" id="bchart"></div>
-  </div>
-  <br>
-  <script>
-    var width = window.innerWidth;
-    var height = window.innerHeight;
-
-    var stage = new Konva.Stage({
-      container: 'container',
-      width: 800,
-      height: 300,
-    });
-
-    var layer = new Konva.Layer();
-    stage.add(layer);
-
-    // if you want to make something with native 2d canvas
-    //we can create it and use it for Konva.Image
-    var img = new Image()
-
-    img.onload = function () {
-      draw(this)
-    }
-
-    img.src = 'ln.BMP'
-
-    function draw(imageObj) {
-      var canvas = document.createElement('canvas');
-      canvas.width = 300
-      canvas.height = 300
-      var ctx = canvas.getContext('2d');
-      ctx.drawImage(imageObj, 0, 0)
-      var image = new Konva.Image({
-        image: canvas,
-        draggable: true,
+      var stage = new Konva.Stage({
+        container: 'container',
+        width: width,
+        height: height,
       });
 
-      image.on('mouseover', function () {
-        // console.log(this.getImage())
+      var layer = new Konva.Layer();
+      stage.add(layer);
 
-        var ctx = this.getImage().getContext('2d')
-        // console.log(ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height))
+      // add default shape
+      var shape = new Konva.Circle({
+        x: stage.width() / 2,
+        y: stage.height() / 2,
+        radius: 50,
+        fill: 'red',
+        shadowBlur: 10,
+      });
+      layer.add(shape);
 
-      })
-      layer.add(image);
-      var img = new Image(); //定义图像对象
-      var pxData = null; //定义存储像素的数组
-      var rNumber = new Array(256).fill(0); //定义每一个像素点中R通道值的出现次数
-      var gNumber = new Array(256).fill(0); //定义每一个像素点中R通道值的出现次数
-      var bNumber = new Array(256).fill(0); //定义每一个像素点中R通道值的出现次数
+      stage.on('dblclick dbltap', function () {
+        // add a new shape
+        var newShape = new Konva.Circle({
+          x: stage.getPointerPosition().x,
+          y: stage.getPointerPosition().y,
+          radius: 10 + Math.random() * 30,
+          fill: Konva.Util.getRandomColor(),
+          shadowBlur: 10,
+        });
+        layer.add(newShape);
+      });
 
-      
-      
-      var imgData = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
-      pxData = imgData.data; //获取每一个像素
-      console.log("imgData", pxData);
-      
-      // 统计每一个像素点的RGB三通道
-      rNumber = new Array(256).fill(0);
-      gNumber = new Array(256).fill(0);
-      bNumber = new Array(256).fill(0);
+      // setup menu
+      let currentShape;
+      var menuNode = document.getElementById('menu');
+      document.getElementById('pulse-button').addEventListener('click', () => {
+        currentShape.to({
+          scaleX: 1,
+          scaleY: 1,
+          onFinish: () => {
+            currentShape.to({ scaleX: 1, scaleY: 1 });
+          },
+        });
+      });
 
-     var rrangeNum = 256
-     var grangeNum = 256
-     var brangeNum = 256
-     
-      
-      for (let i = 0; i < pxData.length; i += 4) {
-        rNumber[pxData[i]]++;
-        gNumber[pxData[i + 1]]++;
-        bNumber[pxData[i + 2]]++;
-      }
+      document.getElementById('delete-button').addEventListener('click', () => {
+        currentShape.destroy();
+      });
 
-      display("rchart", rNumber, "红色直方图分布", ['#ff0000'],rrangeNum);
-      display("gchart", gNumber, "绿色直方图分布", ['#00ff00'],grangeNum);
-      display("bchart", bNumber, "蓝色直方图分布", ['#0000ff'],brangeNum);
+      window.addEventListener('click', () => {
+        // hide menu
+        menuNode.style.display = 'none';
+      });
 
-      function display(id, data, title, color,rangeNum) {
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById(id));
-        let ranges = new Array(rangeNum).fill(0), displayData = new Array(rangeNum).fill(0);
-        let delt = Math.ceil(256 / rangeNum);
-        for (let i = 0; i < rangeNum; i++) {
-          ranges[i] = i;
-          for (let j = 0; j < delt; j++) {
-            displayData[i] += data[i * delt + j];
-          }
+      stage.on('contextmenu', function (e) {
+        // prevent default behavior
+        e.evt.preventDefault();
+        if (e.target === stage) {
+          // if we are on empty place of the stage we will do nothing
+          // return;
         }
-        // console.log(ranges);
-        myChart.setOption({
-          title: {
-            text: title,
-          },
-          tooltip: {},//悬浮显示
-          xAxis: {
-            data: ranges
-          },
-          yAxis: {
-            type: "value",//y轴显示区间分量的个数
-          },
-          series: [{
-            name: '个数',
-            type: 'bar',
-            color: color,
-            data: displayData
-          }]
-        }, rangeNum);
-      }
-
-    }
-  </script>
-</body>
-
+        currentShape = e.target;
+        // show menu
+        menuNode.style.display = 'initial';
+        var containerRect = stage.container().getBoundingClientRect();
+        menuNode.style.top =
+          containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+        menuNode.style.left =
+          containerRect.left + stage.getPointerPosition().x + 4 + 'px';
+      });
+    </script>
+  </body>
 </html>

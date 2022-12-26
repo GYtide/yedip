@@ -9,6 +9,7 @@
 </head>
 <link rel="stylesheet" href="./css/index.css">
 <link rel="stylesheet" href="./css/attrList.css">
+<link rel="stylesheet" href="./css/menu.css">
 
 <body style="overflow:hidden">
     <div>
@@ -132,10 +133,10 @@
                                 <button class="attrbtn" onclick="rmIsolatedPoints()">孤立点去除</button>
                             </li>
 
-                            <li style="visibility: hidden;">
+                            <li style="visibility: hidden">
                                 <label class="attrchoice">使用 Transformer :</label>
                                 <input id="transformer" style="zoom: 150%;" type="checkbox"
-                                    onclick="transformerOclick(this)" value="" class="attrinfo">
+                                    onclick="transformerOclick(this)" value="" class="attrinfo" checked="checked">
                                 <div style="font-size: 10px;">
                                     transformer 只会有视图层变化，不会影响我们要操作的文件数据的实际数值
                                 </div>
@@ -259,6 +260,21 @@
             </div>
             <!-- <div class="controlPanel item"></div> -->
             <!-- <div class="six item">Six</div> -->
+            <div id="menu">
+                <div>
+                    <button id="exportcanvas">导出画布</button>
+                    <button id="exporttoclipboard" onclick="saveTowindowsclipboard(stage)">保存至系统剪贴板</button>
+                    
+                </div>
+            </div>
+            <div id="imagemenu">
+                <div>
+                    <button id="exportimage">导出图片</button>
+                    <button id="saveimagetoclipboard" onclick="saveTowindowsclipboard(graphNow)">保存至系统剪贴板</button>
+                    
+                </div>
+            </div>
+
 
         </div>
 </body>
@@ -305,27 +321,83 @@
     var zoomratio = document.getElementById('Zoomratio')
     var zoomratio1 = document.getElementById('Zoomratio1')
 
+    // 右键菜单
+    var menuNode = document.getElementById('menu');
+    var imagemenuNode = document.getElementById('imagemenu')
+
+    // 创建一个 html 元素并利用 link 触发浏览器的下载功能已经转换为 base64 的图片
+
+    function downloadURI(uri, name) {
+        var link = document.createElement('a');
+        link.download = name;
+        link.href = uri;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        delete link;
+    }
+    document.getElementById('exportcanvas').addEventListener('click', function () {
+        var dataURL = stage.toDataURL({ pixelRatio: 3 });
+
+        downloadURI(dataURL, 'stage.png');
+    },
+        false
+    )
+    document.getElementById('exportimage').addEventListener('click', function () {
+        var dataURL = graphNow.toDataURL({ pixelRatio: 3 });
+
+        downloadURI(dataURL, 'image.png');
+    },
+        false
+    )
+
+
+    // 保存至系统剪贴板
+    async function saveTowindowsclipboard(shape) {
+        if(!shape){
+            return ;
+        }
+
+        // 如果是图片暂时去除选中的边缘效果
+        var dataURL = shape.toDataURL({ pixelRatio: 3 });
+        const data = await fetch(dataURL);
+            const blob = await data.blob();
+
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    [blob.type]: blob
+                })
+            ]);
+            console.log('Fetched image copied.');
+
+        navigator.clipboard.readText().then(
+            clipText => {
+                console.log(clipText)
+            });;
+    }
+
+
 
 
     // 缩放滚动条的监视
-    function change2(){
-  
+    function change2() {
+
         zoomratio1.value = zoomratio.value
-        if(graphNow){
+        if (graphNow) {
             graphNow.zoomRatio = zoomratio.value
-            graphNow.width(graphNow.srcwidth *graphNow.zoomRatio)
-            graphNow.height(graphNow.srcheight*graphNow.zoomRatio)
+            graphNow.width(graphNow.srcwidth * graphNow.zoomRatio)
+            graphNow.height(graphNow.srcheight * graphNow.zoomRatio)
             setgraphNow()
         }
 
     }
- 
-    function change2(){
+
+    function change2() {
         zoomratio1.value = zoomratio.value
-        if(graphNow){
+        if (graphNow) {
             graphNow.zoomRatio = zoomratio.value
-            graphNow.width(graphNow.srcwidth *graphNow.zoomRatio)
-            graphNow.height(graphNow.srcheight*graphNow.zoomRatio)
+            graphNow.width(graphNow.srcwidth * graphNow.zoomRatio)
+            graphNow.height(graphNow.srcheight * graphNow.zoomRatio)
             setgraphNow()
         }
     }
@@ -390,6 +462,10 @@
 
     // 移除图形,清空画布
     function removeFn() {
+        let mymessage = confirm("确认清空画布？");
+        if (!mymessage) {
+            return;
+        }
         // 清除 Transformer
         let trans = stage.find('Transformer')
 
@@ -495,10 +571,10 @@
             Zoomratio1.value = graphNow.zoomRatio
             Zoomratio.value = graphNow.zoomRatio
             console.log(graphNow)
-            graphNow.strokeWidth(5)
+            // graphNow.strokeWidth(5)
             graphNow.moveToTop()
-            bmpwidth.value = Math.floor( graphNow.width())
-            bmpheight.value = Math.floor( graphNow.height())
+            bmpwidth.value = Math.floor(graphNow.width())
+            bmpheight.value = Math.floor(graphNow.height())
 
             bmpx.value = graphNow.attrs.x
             bmpy.value = graphNow.attrs.y
@@ -539,7 +615,9 @@
                 borderStroke: '#000', // 虚线颜色
                 borderStrokeWidth: 1, //虚线大小
                 borderDash: [5], // 虚线间距
-                keepRatio: false // 不等比缩放
+                keepRatio: false, // 不等比缩放
+                resizeEnabled: false,//不用于放缩
+                rotateEnabled:false //不用于旋转，只作为标识是否被选中
             });
 
             layer.add(tr);
@@ -600,6 +678,37 @@
         drawing = false;
         if (flag === 'text') flag = null;
     });
+
+
+    // 舞台鼠标右键菜单
+
+    // 
+    window.addEventListener('click', () => {
+        // hide menu
+        menuNode.style.display = 'none';
+        imagemenuNode.style.display = 'none'
+    });
+
+
+    stage.on('contextmenu', function (e) {
+        menuNode.style.display = 'none';
+        
+        if (e.target == stage) {
+            imagemenuNode.style.display = 'none'
+            e.evt.preventDefault();
+            // console.log(e)
+            menuNode.style.display = 'initial';
+            var containerRect = stage.container().getBoundingClientRect();
+            menuNode.style.top =
+                containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+            menuNode.style.left =
+                containerRect.left + stage.getPointerPosition().x + 4 + 'px';
+        }
+
+
+
+
+    })
 
     function export2json() {
         var json = stage.toJSON();

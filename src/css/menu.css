@@ -1,0 +1,43 @@
+#menu {
+    display: none;
+    position: absolute;
+    width: 120px;
+    background-color: white;
+    box-shadow: 0 0 5px grey;
+    border-radius: 3px;
+    border-radius: 10%
+}
+
+#imagemenu{
+    display: none;
+    position: absolute;
+    width: 120px;
+    background-color: white;
+    box-shadow: 0 0 5px grey;
+    border-radius: 3px;
+    border-radius: 10%
+}
+
+#imagemenu button {
+    font-size:small;
+    width: 100%;
+    height: 30px;
+    background-color: white;
+    border: none;
+    margin: 0;
+    padding: px;
+}
+
+#menu  button {
+    font-size:small;
+    width: 100%;
+    height: 30px;
+    background-color: white;
+    border: none;
+    margin: 0;
+    padding: px;
+  }
+
+  #menu button:hover {
+    background-color: lightgray;
+  }
