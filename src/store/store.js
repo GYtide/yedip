@@ -136,6 +136,7 @@ function HistogramEqualization(imdata) {
 
 /**
  * 生成高斯分布(正态分布)数组
+ * 使用 Box-Muller 算法获取正态分布
  * @param width 图像宽度
  * @param height 图像高度
  * @param mathExpe 期望

@@ -48,7 +48,7 @@ function drawImage(imageObj) {
             imdata[(j * newImage.width + i) * 4] = newdata[(j * newImage.width + i) * 4]
             imdata[(j * newImage.width + i) * 4 + 1] = newdata[(j * newImage.width + i) * 4 + 1]
             imdata[(j * newImage.width + i) * 4 + 2] = newdata[(j * newImage.width + i) * 4 + 2]
-            imdata[(j * newImage.width + i) * 4 + 3] = newdata[(j * newImage.width + i) * 4 + 3]
+            imdata[(j * newImage.width +   i) * 4 + 3] = newdata[(j * newImage.width + i) * 4 + 3]
         }
     }
 
