@@ -71,7 +71,8 @@ input[type="radio"]:checked+label+div {
 
 .contentIndex {
     float: left;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
+    padding: 10px;
     color:rgb(19, 44, 120);
     /* background-color: #5177bf; */
 
@@ -103,7 +104,8 @@ input[type="radio"]:checked+label+div {
 } */
 
 .attrinfo {
-    width: 70px;
+    width: 80px;
+    height: 25px;
 
 }
 
@@ -115,6 +117,7 @@ input[type="radio"]:checked+label+div {
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 10px;
+    font-size: 14px;
 }
 .toolbtn {
     width: auto;

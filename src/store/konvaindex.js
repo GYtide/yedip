@@ -142,8 +142,8 @@ function drawImage(imageObj) {
     
     Img.on('dragmove', function () {
         
-        bmpx.value = this.attrs.x
-        bmpy.value = this.attrs.y
+        bmpx.value = Math.round(this.attrs.x)
+        bmpy.value = Math.round(this.attrs.y)
     })
     
     Img.on('mouseover', function () {

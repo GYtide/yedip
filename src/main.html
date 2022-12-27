@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>dip</title>
 </head>
+<link rel="stylesheet" href="../lib/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="./css/index.css">
 <link rel="stylesheet" href="./css/attrList.css">
 <link rel="stylesheet" href="./css/menu.css">
@@ -15,11 +16,11 @@
     <div>
         <div class="wrapper">
             <div class="tool item">
-                <button class="toolbtn" onclick="importImage()">导入图片</button>
-                <button class="toolbtn" onclick="importlnImage('ln.BMP')">示例(莱娜图)</button>
-                <button class="toolbtn" onclick="importlnImage('chinamap.BMP')">示例(地图)</button>
-                <button class="toolbtn" onclick="importlnImage('1543.BMP')">示例(建筑)</button>
-                <button class="toolbtn" onclick="importlnImage('256car.BMP')">示例(车牌)</button>
+                <button class="toolbtn btn btn-primary" onclick="importImage()">导入图片</button>
+                <button class="toolbtn btn btn-secondary" onclick="importlnImage('ln.BMP')">示例(莱娜图)</button>
+                <button class="toolbtn btn btn-success" onclick="importlnImage('chinamap.BMP')">示例(地图)</button>
+                <button class="toolbtn btn  btn-info" onclick="importlnImage('1543.BMP')">示例(建筑)</button>
+                <button class="toolbtn btn btn btn-warning" onclick="importlnImage('256car.BMP')">示例(车牌)</button>
                 <!-- <button onclick="flagFn(this,'pencil')">铅笔</button>
                 <button onclick="flagFn(this, 'rectH');">矩形框</button>
                 <button onclick="flagFn(this, 'ellipse');">椭圆-空心</button>
@@ -31,13 +32,13 @@
                 </select> -->
             </div>
             <div class="file item">
-                <button class="toolbtn" onclick="removeFn();">清空画板</button>
-                <button class="toolbtn" onclick="context2canvas(document.getElementById('contextpanel'))">导出绘图区</button>
-                <button class="toolbtn"
-                    onclick="context2canvas2clip(document.getElementById('contextpanel'))">导出绘图区到剪贴板</button>
-                <button class="toolbtn" onclick="context2canvas(document.getElementById('histogram'))">导出直方图</button>
-                <button class="toolbtn"
-                    onclick="context2canvas2clip(document.getElementById('histogram'))">导出直方图到剪贴板</button>
+                <button class="toolbtn btn btn-danger" onclick="removeFn();">清空画板</button>
+                <button class="toolbtn btn btn btn-success" onclick="context2canvas(document.getElementById('contextpanel'))">导出绘图区</button>
+                <button class="toolbtn btn btn btn-info"
+                onclick="context2canvas2clip(document.getElementById('contextpanel'))">导出绘图区到剪贴板</button>
+                <button class="toolbtn btn btn-success" onclick="context2canvas(document.getElementById('histogram'))">导出直方图</button>
+                <button class="toolbtn btn btn btn-info"
+                onclick="context2canvas2clip(document.getElementById('histogram'))">导出直方图到剪贴板</button>
             </div>
 
             <!-- <div id="container"></div> -->
@@ -56,7 +57,7 @@
                                 <br>
                                 <label class="attrContent">X :</label>
                                 <input id="mousex" type="text" style="text-align: center;" value="" disabled
-                                    class="attrinfo">
+                                    class="attrinfo ">
                                 <label class="attrContent">Y :</label>
                                 <input id="mousey" type="text" style="text-align: center;" value="" disabled
                                     class="attrinfo">
@@ -65,10 +66,10 @@
                             <li class="contentIndex">
                                 <label class="">图形信息</label>
                                 <br>
-                                <label class="attrContent">高度 :</label>
+                                <label class="attrContent">高:</label>
                                 <input id="bmpheight" type="text" style="text-align: center;" value="" disabled
                                     class="attrinfo">
-                                <label class="attrContent">宽度 :</label>
+                                <label class="attrContent">宽:</label>
                                 <input id="bmpwidth" type="text" style="text-align: center;" value="" disabled
                                     class="attrinfo">
                             </li>
@@ -85,8 +86,10 @@
                             <li class="contentIndex">
                                 <label class="">图像还原</label>
                                 <br>
-                                <button class="attrbtn" onclick="return2src()">还原为原图</button>
-                                <button class="attrbtn" onclick="return2gray('mean')">原图平均灰度化</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray()">undo</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray('mean')">redu</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="return2src()">还原为原图</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="return2gray('mean')">原平均灰度化</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">几何变换</label>
@@ -102,40 +105,40 @@
                             <li class="contentIndex">
                                 <label class="">灰度变化</label>
                                 <br>
-                                <button class="attrbtn" onclick="rgb2gray()">加权灰度化</button>
-                                <button class="attrbtn" onclick="rgb2gray('mean')">平均灰度化</button>
-                                <button class="attrbtn" onclick="Equalization()">均衡直方图</button>
-                                <button class="attrbtn" onclick="Invertedcolor()">取反色</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray()">加权灰度化</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray('mean')">平均灰度化</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Equalization()">均衡直方图</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Invertedcolor()">取反色</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">噪声抑制</label>
                                 <br>
-                                <button class="attrbtn" onclick="addGaussiannoise()">添加高斯噪声</button>
-                                <button class="attrbtn" onclick="addPretzelnoise()">添加椒盐噪声</button>
-                                <button class="attrbtn" onclick="Meanvaluefiltering()">均值滤波</button>
-                                <button class="attrbtn" onclick="Medianvaluefiltering()">中值滤波</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="addGaussiannoise()">添加高斯噪声</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="addPretzelnoise()">添加椒盐噪声</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Meanvaluefiltering()">均值滤波</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Medianvaluefiltering()">中值滤波</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">锐化和边缘检测</label>
                                 <br>
-                                <button class="attrbtn" onclick="Horizontalsharpening()">水平一阶锐化</button>
-                                <button class="attrbtn" onclick="Sobelsharpening()">Sobel锐化</button>
-                                <button class="attrbtn" onclick="LOGsharpening()">LOG锐化</button>
-                                <button class="attrbtn" onclick="Horizontalenchasing()">水平浮雕</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Horizontalsharpening()">水平一阶锐化</button>
+                                <button class="attrbtn btn-outline-success btn" onclick="Sobelsharpening()">Sobel锐化</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="LOGsharpening()">LOG锐化</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Horizontalenchasing()">水平浮雕</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">分割测量</label>
                                 <br>
-                                <button class="attrbtn" onclick="Iterativethresholdpartitioning()">迭代阈值分割</button>
-                                <button class="attrbtn" onclick="Contourextraction()">轮廓提取</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Iterativethresholdpartitioning()">迭代阈值分割</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Contourextraction()">轮廓提取</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">二值处理</label>
                                 <br>
-                                <button class="attrbtn" onclick="Iterativethresholdpartitioning()">迭代阈值二值化</button>
-                                <button class="attrbtn" onclick="corrosion()">腐蚀</button>
-                                <button class="attrbtn" onclick="expansion()">膨胀</button>
-                                <button class="attrbtn" onclick="rmIsolatedPoints()">孤立点去除</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="Iterativethresholdpartitioning()">迭代二值化</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="corrosion()">腐蚀</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="expansion()">膨胀</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="rmIsolatedPoints()">孤立点去除</button>
                             </li>
 
                             <li style="visibility: hidden">
@@ -277,7 +280,7 @@
             </div>
             <div id="imagemenu">
                 <div>
-                    <button id="exportimage">导出图片</button>
+                    <button id="exportimage" >导出图片</button>
                     <button id="saveimagetoclipboard" onclick="saveTowindowsclipboard(graphNow)">保存至系统剪贴板</button>
 
                 </div>
@@ -619,8 +622,8 @@
             bmpwidth.value = Math.floor(graphNow.width())
             bmpheight.value = Math.floor(graphNow.height())
 
-            bmpx.value = graphNow.attrs.x
-            bmpy.value = graphNow.attrs.y
+            bmpx.value = Math.round( graphNow.attrs.x)
+            bmpy.value = Math.round(graphNow.attrs.y)
 
             updateImageinfoPan()
 
