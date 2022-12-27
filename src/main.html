@@ -29,7 +29,15 @@
                     <option value="blue">蓝色</option>
                     <option value="green">绿色</option>
                 </select> -->
+            </div>
+            <div class="file item">
                 <button class="toolbtn" onclick="removeFn();">清空画板</button>
+                <button class="toolbtn" onclick="context2canvas(document.getElementById('contextpanel'))">导出绘图区</button>
+                <button class="toolbtn"
+                    onclick="context2canvas2clip(document.getElementById('contextpanel'))">导出绘图区到剪贴板</button>
+                <button class="toolbtn" onclick="context2canvas(document.getElementById('histogram'))">导出直方图</button>
+                <button class="toolbtn"
+                    onclick="context2canvas2clip(document.getElementById('histogram'))">导出直方图到剪贴板</button>
             </div>
 
             <!-- <div id="container"></div> -->
@@ -245,34 +253,33 @@
                 </div>
             </div>
 
-            <div class="histogram item">
-                <div class="echart-rgb-box" id="rchart"></div>
-                <div class="echart-rgb-box" id="gchart"></div>
-                <div class="echart-rgb-box" id="bchart"></div>
-                <!-- <div class="" id="rchart"></div>
-                <div class="" id="gchart"></div>
-                <div class="" id="bchart"></div> -->
-                <div class="echart-gray-box" id="graychart"></div>
+            <div id="contextpanel" class="item">
 
-            </div>
-            <div class="sketchpad item ">
-                <div id="container"></div>
+                <div class="sketchpad item ">
+                    <div id="container"></div>
+                </div>
+                <div class="histogram item" id="histogram">
+                    <div class="echart-rgb-box" id="rchart"></div>
+                    <div class="echart-rgb-box" id="gchart"></div>
+                    <div class="echart-rgb-box" id="bchart"></div>
+                    <div class="echart-gray-box" id="graychart"></div>
 
+                </div>
             </div>
-            <!-- <div class="controlPanel item"></div> -->
-            <!-- <div class="six item">Six</div> -->
+
+
             <div id="menu">
                 <div>
                     <button id="exportcanvas">导出画布</button>
                     <button id="exporttoclipboard" onclick="saveTowindowsclipboard(stage)">保存至系统剪贴板</button>
-                    
+
                 </div>
             </div>
             <div id="imagemenu">
                 <div>
                     <button id="exportimage">导出图片</button>
                     <button id="saveimagetoclipboard" onclick="saveTowindowsclipboard(graphNow)">保存至系统剪贴板</button>
-                    
+
                 </div>
             </div>
 
@@ -284,6 +291,7 @@
 <script src="./store/attrList.js"></script>
 <script src="./store/store.js"></script>
 <script src="../lib/echarts/echarts.min.js"></script>
+<script src="../lib/html2canvas.js"></script>
 <script>
     // import * as fs from 'fs';
     // 文件读取模块
@@ -355,13 +363,47 @@
 
     // 保存至系统剪贴板
     async function saveTowindowsclipboard(shape) {
-        if(!shape){
-            return ;
+        if (!shape) {
+            return;
         }
 
-        // 如果是图片暂时去除选中的边缘效果
         var dataURL = shape.toDataURL({ pixelRatio: 3 });
         const data = await fetch(dataURL);
+        const blob = await data.blob();
+
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                [blob.type]: blob
+            })
+        ]);
+        console.log('Fetched image copied.');
+
+        navigator.clipboard.readText().then(
+            clipText => {
+                console.log(clipText)
+            });;
+    }
+
+    // 导出绘图区
+    function context2canvas(element) {
+        html2canvas(element).then(canvas => {
+            // document.body.appendChild(canvas)
+            // console.log(canvas)
+            var dataURL = canvas.toDataURL({ pixelRatio: 3 });
+            downloadURI(dataURL, 'image.png');
+        });
+
+    }
+
+    // 导出到剪贴板
+
+    function context2canvas2clip(element) {
+        var dataURL
+        html2canvas(element).then(async canvas => {
+            // document.body.appendChild(canvas)
+            // console.log(canvas)
+            dataURL = canvas.toDataURL({ pixelRatio: 3 });
+            const data = await fetch(dataURL);
             const blob = await data.blob();
 
             await navigator.clipboard.write([
@@ -371,12 +413,12 @@
             ]);
             console.log('Fetched image copied.');
 
-        navigator.clipboard.readText().then(
-            clipText => {
-                console.log(clipText)
-            });;
+            navigator.clipboard.readText().then(
+                clipText => {
+                    console.log(clipText)
+                });;
+        });
     }
-
 
 
 
@@ -504,7 +546,7 @@
     const stage = new Konva.Stage({
         container: 'container',
         width: 1100,
-        height: 700
+        height: 650
     });
 
     // 2 create layer
@@ -618,7 +660,7 @@
                 borderDash: [5], // 虚线间距
                 keepRatio: false, // 不等比缩放
                 resizeEnabled: false,//不用于放缩
-                rotateEnabled:false //不用于旋转，只作为标识是否被选中
+                rotateEnabled: false //不用于旋转，只作为标识是否被选中
             });
 
             layer.add(tr);
@@ -693,7 +735,7 @@
 
     stage.on('contextmenu', function (e) {
         menuNode.style.display = 'none';
-        
+
         if (e.target == stage) {
             imagemenuNode.style.display = 'none'
             e.evt.preventDefault();

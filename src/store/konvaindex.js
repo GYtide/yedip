@@ -75,7 +75,7 @@ function drawImage(imageObj) {
 
     // 进行缩放
     console.log(zoomRatio)
-    if(zoomRatio <= 0.3 ){
+    if(zoomRatio < 0.3 ){
         alert ('图片过大无法正常显示')
         return
     }
