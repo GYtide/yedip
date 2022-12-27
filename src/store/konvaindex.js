@@ -210,31 +210,31 @@ function drawImage(imageObj) {
     //             containerRect.left + stage.getPointerPosition().x + 4 + 'px';
     //     }
     // })
-    // Img.on('dblclick', function () {
-    //     // 双击删除自己
-    //     this.remove();
-    //     // 遍历移除图形选择框
-    //     // stage.find('Transformer').destroy();
+    Img.on('dblclick', function () {
+        // 双击删除自己
+        this.remove();
+        // 遍历移除图形选择框
+        // stage.find('Transformer').destroy();
 
-    //     let trans = stage.find('Transformer')
+        let trans = stage.find('Transformer')
 
-    //     for (let i = 0; i < trans.length; ++i) {
+        for (let i = 0; i < trans.length; ++i) {
 
-    //         trans[i].destroy()
-    //     }
+            trans[i].destroy()
+        }
 
-    //     // 移除选中信息
-    //     bmpwidth.value = ""
-    //     bmpheight.value = ""
-    //     bmpx.value = ""
-    //     bmpy.value = ""
+        // 移除选中信息
+        bmpwidth.value = ""
+        bmpheight.value = ""
+        bmpx.value = ""
+        bmpy.value = ""
 
-    //     // 双击时 graphNow 必然是 this
-    //     unsetgraphNow()
+        // 双击时 graphNow 必然是 this
+        unsetgraphNow()
 
-    //     layer.draw();
+        layer.draw();
     
-    // });
+    });
     // console.log(p.bmpFile)
 
 }
