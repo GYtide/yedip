@@ -505,7 +505,7 @@
 
     }
     function importlnImage(imagename) {
-        console.log(layer.children[layer.children.length - 1]?.getType())
+        // console.log(layer.children[layer.children.length - 1]?.getType())
         // 限制图片数量在 6 以下,如果第七个
         if (layer.children.length > 6 || (layer.children.length > 5 && layer.children[layer.children.length - 1]?.getType() != 'Group')) {
             canvasmessage('图片数量太多啦')
@@ -643,7 +643,7 @@
             Zoomratio.disabled = false
             Zoomratio1.value = graphNow.zoomRatio
             Zoomratio.value = graphNow.zoomRatio
-            console.log(graphNow)
+            // console.log(graphNow)
             // graphNow.strokeWidth(5)
             graphNow.moveToTop()
             bmpwidth.value = Math.floor(graphNow.width())

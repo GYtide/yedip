@@ -286,7 +286,7 @@ function Equalization() {
             clearHistogram()
             let hisdata = histogramData(imdata)
             // 画出灰度直方图
-            console.log(hisdata.rNumber)
+            // console.log(hisdata.rNumber)
             drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
 
             cans.putImageData(catx, 0, 0)

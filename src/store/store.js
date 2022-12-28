@@ -328,7 +328,7 @@ function Horizontalsharpe(imdata, width, height) {
 
     var tmpimdata = []
 
-    console.log(imdata, width, height)
+    // console.log(imdata, width, height)
     // 复刻一个数组
     for (let i = 0; i < imdata.length; ++i) {
         tmpimdata[i] = imdata[i]

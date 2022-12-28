@@ -105,5 +105,5 @@ let headerBitStream = rbuf.slice(0, 14)
 
 var headers = getHeader(headerBitStream)
 
-console.log(headers)
+// console.log(headers)
  
