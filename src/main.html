@@ -33,12 +33,14 @@
             </div>
             <div class="file item">
                 <button class="toolbtn btn btn-danger" onclick="removeFn();">清空画板</button>
-                <button class="toolbtn btn btn btn-success" onclick="context2canvas(document.getElementById('contextpanel'))">导出绘图区</button>
+                <button class="toolbtn btn btn btn-success"
+                    onclick="context2canvas(document.getElementById('contextpanel'))">导出绘图区</button>
                 <button class="toolbtn btn btn btn-info"
-                onclick="context2canvas2clip(document.getElementById('contextpanel'))">导出绘图区到剪贴板</button>
-                <button class="toolbtn btn btn-success" onclick="context2canvas(document.getElementById('histogram'))">导出直方图</button>
+                    onclick="context2canvas2clip(document.getElementById('contextpanel'))">导出绘图区到剪贴板</button>
+                <button class="toolbtn btn btn-success"
+                    onclick="context2canvas(document.getElementById('histogram'))">导出直方图</button>
                 <button class="toolbtn btn btn btn-info"
-                onclick="context2canvas2clip(document.getElementById('histogram'))">导出直方图到剪贴板</button>
+                    onclick="context2canvas2clip(document.getElementById('histogram'))">导出直方图到剪贴板</button>
             </div>
 
             <!-- <div id="container"></div> -->
@@ -86,10 +88,11 @@
                             <li class="contentIndex">
                                 <label class="">图像还原</label>
                                 <br>
-                                <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray()">undo</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray('mean')">redu</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="undo()">撤销</button>
+                                <button class="attrbtn  btn-outline-success btn" onclick="redo()">返回</button>
                                 <button class="attrbtn  btn-outline-success btn" onclick="return2src()">还原为原图</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="return2gray('mean')">原平均灰度化</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="return2gray('mean')">原平均灰度化</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">几何变换</label>
@@ -106,39 +109,52 @@
                                 <label class="">灰度变化</label>
                                 <br>
                                 <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray()">加权灰度化</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="rgb2gray('mean')">平均灰度化</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="rgb2gray('mean')">平均灰度化</button>
                                 <button class="attrbtn  btn-outline-success btn" onclick="Equalization()">均衡直方图</button>
                                 <button class="attrbtn  btn-outline-success btn" onclick="Invertedcolor()">取反色</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">噪声抑制</label>
                                 <br>
-                                <button class="attrbtn  btn-outline-success btn" onclick="addGaussiannoise()">添加高斯噪声</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="addPretzelnoise()">添加椒盐噪声</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="Meanvaluefiltering()">均值滤波</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="Medianvaluefiltering()">中值滤波</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="addGaussiannoise()">添加高斯噪声</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="addPretzelnoise()">添加椒盐噪声</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="Meanvaluefiltering()">均值滤波</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="Medianvaluefiltering()">中值滤波</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">锐化和边缘检测</label>
                                 <br>
-                                <button class="attrbtn  btn-outline-success btn" onclick="Horizontalsharpening()">水平一阶锐化</button>
-                                <button class="attrbtn btn-outline-success btn" onclick="Sobelsharpening()">Sobel锐化</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="LOGsharpening()">LOG锐化</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="Horizontalenchasing()">水平浮雕</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="Horizontalsharpening()">水平一阶锐化</button>
+                                <button class="attrbtn btn-outline-success btn"
+                                    onclick="Sobelsharpening()">Sobel锐化</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="LOGsharpening()">LOG锐化</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="Horizontalenchasing()">水平浮雕</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">分割测量</label>
                                 <br>
-                                <button class="attrbtn  btn-outline-success btn" onclick="Iterativethresholdpartitioning()">迭代阈值分割</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="Contourextraction()">轮廓提取</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="Iterativethresholdpartitioning()">迭代阈值分割</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="Contourextraction()">轮廓提取</button>
                             </li>
                             <li class="contentIndex">
                                 <label class="">二值处理</label>
                                 <br>
-                                <button class="attrbtn  btn-outline-success btn" onclick="Iterativethresholdpartitioning()">迭代二值化</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="Iterativethresholdpartitioning()">迭代二值化</button>
                                 <button class="attrbtn  btn-outline-success btn" onclick="corrosion()">腐蚀</button>
                                 <button class="attrbtn  btn-outline-success btn" onclick="expansion()">膨胀</button>
-                                <button class="attrbtn  btn-outline-success btn" onclick="rmIsolatedPoints()">孤立点去除</button>
+                                <button class="attrbtn  btn-outline-success btn"
+                                    onclick="rmIsolatedPoints()">孤立点去除</button>
                             </li>
 
                             <li style="visibility: hidden">
@@ -281,7 +297,7 @@
             </div>
             <div id="imagemenu">
                 <div>
-                    <button id="exportimage" >导出图片</button>
+                    <button id="exportimage">导出图片</button>
                     <button id="saveimagetoclipboard" onclick="saveTowindowsclipboard(graphNow)">保存至系统剪贴板</button>
 
                 </div>
@@ -489,11 +505,11 @@
 
     }
     function importlnImage(imagename) {
-        console.log( layer.children[layer.children.length-1]?.getType())
+        console.log(layer.children[layer.children.length - 1]?.getType())
         // 限制图片数量在 6 以下,如果第七个
-        if(layer.children.length > 6 || (layer.children.length>5 && layer.children[layer.children.length-1]?.getType() != 'Group' )){
+        if (layer.children.length > 6 || (layer.children.length > 5 && layer.children[layer.children.length - 1]?.getType() != 'Group')) {
             canvasmessage('图片数量太多啦')
-            return ;
+            return;
         }
 
         var imageObj = new Image();
@@ -627,13 +643,13 @@
             Zoomratio.disabled = false
             Zoomratio1.value = graphNow.zoomRatio
             Zoomratio.value = graphNow.zoomRatio
-            // console.log(graphNow)
+            console.log(graphNow)
             // graphNow.strokeWidth(5)
             graphNow.moveToTop()
             bmpwidth.value = Math.floor(graphNow.width())
             bmpheight.value = Math.floor(graphNow.height())
 
-            bmpx.value = Math.round( graphNow.attrs.x)
+            bmpx.value = Math.round(graphNow.attrs.x)
             bmpy.value = Math.round(graphNow.attrs.y)
 
             updateImageinfoPan()
@@ -761,10 +777,6 @@
             menuNode.style.left =
                 containerRect.left + stage.getPointerPosition().x + 4 + 'px';
         }
-
-
-
-
     })
 
     function export2json() {
@@ -804,11 +816,11 @@
     }
 
 
-    function canvasmessage(message){
+    function canvasmessage(message) {
         var mesdilog = document.getElementById('message')
 
         mesdilog.innerHTML = message
-        setTimeout(()=>{
+        setTimeout(() => {
             mesdilog.innerHTML = ""
         }, 3000);
     }
@@ -816,13 +828,99 @@
 
     // undo 和 redo
 
-    function undo(){
+    function undo() {
+
+        if (graphNow) {
+
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+
+            let newdata = graphNow.historyimg.undo()
+
+            if (!newdata) {
+                return;
+
+            }
+            // 替换
+
+            for (let i = 0; i < newdata.data.length; ++i) {
+                imdata[i] = newdata.data[i]
+            }
+            graphNow.type = newdata.type
+
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+
+            // 画出直方图
+
+            if (graphNow.type == 'rgb') {
+                // 画出直方图
+                clearHistogram()
+                let hisdata = histogramData(imdata)
+                // 画出灰度直方图
+                drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
+                drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
+                drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
+
+            } else {
+                // 画出直方图
+                clearHistogram()
+                let hisdata = histogramData(imdata)
+                // 画出灰度直方图
+                drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+            }
+        }
 
 
     }
 
-    function redo(){
-        
+    function redo() {
+        if (graphNow) {
+
+            let cans = graphNow.getImage().getContext('2d')
+
+            let catx = cans.getImageData(0, 0, cans.canvas.width, cans.canvas.height)
+
+            let imdata = catx.data
+
+            let newdata = graphNow.historyimg.redo()
+
+            if (!newdata) {
+                return;
+
+            }
+            // 替换
+
+            for (let i = 0; i < newdata.data.length; ++i) {
+                imdata[i] = newdata.data[i]
+            }
+            graphNow.type = newdata.type
+            cans.putImageData(catx, 0, 0)
+            layer.draw();
+
+            // 画出直方图
+
+            if (graphNow.type == 'rgb') {
+                // 画出直方图
+                clearHistogram()
+                let hisdata = histogramData(imdata)
+                // 画出灰度直方图
+                drawHistogram("rchart", hisdata.rNumber, "直方图R", ['#ff0000'], hisdata.rmax);
+                drawHistogram("gchart", hisdata.gNumber, "直方图G", ['#00ff00'], hisdata.gmax);
+                drawHistogram("bchart", hisdata.bNumber, "直方图B", ['#0000ff'], hisdata.bmax);
+
+            } else {
+                // 画出直方图
+                clearHistogram()
+                let hisdata = histogramData(imdata)
+                // 画出灰度直方图
+                drawHistogram("graychart", hisdata.rNumber, "灰度直方图", ['#111111'], hisdata.rmax);
+            }
+        }
+
 
     }
 

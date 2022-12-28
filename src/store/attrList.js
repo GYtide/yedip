@@ -32,6 +32,11 @@ function return2gray(method) {
                 imdata[i + 2] = graphNow.grayImage[i + 2]
             }
         }
+        graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
         cans.putImageData(catx, 0, 0)
         let hisdata = histogramData(imdata)
         // 清除现有直方图
@@ -66,6 +71,11 @@ function return2src() {
             imdata[i + 1] = srcImage[i + 1]
             imdata[i + 2] = srcImage[i + 2]
         }
+        graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
         // 画出直方图
         clearHistogram()
@@ -108,6 +118,11 @@ function rgb2gray(method) {
         for(let i = 0 ; i < imdata.length ;++i){
             imdata[i] = tmpdata[i]
         }
+        graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
         // 画出直方图
         clearHistogram()
@@ -149,6 +164,11 @@ function Invertedcolor(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                 imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
              }
+             graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -256,6 +276,11 @@ function Equalization() {
             let imdata = catx.data
 
             HistogramEqualization(imdata)
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -277,6 +302,11 @@ function Equalization() {
 
             let imdata = catx.data
             HistogramEqualization(imdata)
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -318,6 +348,11 @@ function Horizontalsharpening(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -364,6 +399,11 @@ function Horizontalsharpening(){
                 imdata[i+1] = tmpgdata[j]
                 imdata[i+2] = tmpbdata[j]
              }
+             graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -408,6 +448,11 @@ function Sobelsharpening(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -454,6 +499,11 @@ function Sobelsharpening(){
                 imdata[i+1] = tmpgdata[j]
                 imdata[i+2] = tmpbdata[j]
              }
+             graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -498,6 +548,11 @@ function Horizontalenchasing(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -544,6 +599,11 @@ function Horizontalenchasing(){
                 imdata[i+1] = tmpgdata[j]
                 imdata[i+2] = tmpbdata[j]
              }
+             graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -583,6 +643,11 @@ function LOGsharpening(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -629,6 +694,11 @@ function LOGsharpening(){
                 imdata[i+1] = tmpgdata[j]
                 imdata[i+2] = tmpbdata[j]
              }
+             graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -674,9 +744,16 @@ function Iterativethresholdpartitioning(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+       
             // 图像类型改为二值图像
 
             graphNow.type = 'bin'
+
+            graphNow.historyimg.push(
+                {
+                   data : imdata,
+                   type : graphNow.type
+                })
 
             // 画出直方图
             clearHistogram()
@@ -727,6 +804,11 @@ function Contourextraction(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 图像类型改为二值图像
 
             // 画出直方图
@@ -779,6 +861,11 @@ function corrosion(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 图像类型改为二值图像
 
             // 画出直方图
@@ -830,6 +917,11 @@ function expansion(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 图像类型改为二值图像
 
             // 画出直方图
@@ -853,7 +945,7 @@ function expansion(){
 
 /**
  * 
- * rmIsolatedPoints 消除鼓励点
+ * rmIsolatedPoints 消除孤立点
  * 
  */
 
@@ -879,6 +971,11 @@ function rmIsolatedPoints(){
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 图像类型改为二值图像
 
             // 画出直方图

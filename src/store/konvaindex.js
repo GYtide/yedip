@@ -106,6 +106,13 @@ function drawImage(imageObj) {
     
     graphNow = Img
 
+    // 存放历史记录
+    var historyimg = new History(6)
+
+
+
+    Img.historyimg = historyimg
+
     // console.log(Img._id)
 
 
@@ -160,7 +167,13 @@ function drawImage(imageObj) {
     for (let i = 0; i < trans.length; ++i) {
         trans[i].destroy()
     }
-    
+        // 添加当前图片
+            historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            }
+            )
     setgraphNow()
 
     // 添加 tansformer
@@ -531,6 +544,11 @@ function addGaussiannoise() {
             for(let i = 0 ,j = 0; i< imdata.length; i+=4 , j+=1){
                imdata[i] = imdata[i+1] =  imdata[i+2] =  tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -577,6 +595,11 @@ function addGaussiannoise() {
                 imdata[i+1] = tmpgdata[j]
                 imdata[i+2] = tmpbdata[j]
              }
+             graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -607,6 +630,11 @@ function addPretzelnoise() {
             let imdata = catx.data
             // 添加噪声
             Pretzelnoise(imdata, 'gray')
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -625,6 +653,11 @@ function addPretzelnoise() {
 
             let imdata = catx.data
             Pretzelnoise(imdata, 'rgb')
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -666,6 +699,11 @@ function Meanvaluefiltering() {
             for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 imdata[i] = imdata[i + 1] = imdata[i + 2] = tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -712,6 +750,11 @@ function Meanvaluefiltering() {
                 imdata[i + 1] = tmpgdata[j]
                 imdata[i + 2] = tmpbdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -754,6 +797,11 @@ function Medianvaluefiltering() {
             for (let i = 0, j = 0; i < imdata.length; i += 4, j += 1) {
                 imdata[i] = imdata[i + 1] = imdata[i + 2] = tmpdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
 
             // 画出直方图
             clearHistogram()
@@ -800,6 +848,11 @@ function Medianvaluefiltering() {
                 imdata[i + 1] = tmpgdata[j]
                 imdata[i + 2] = tmpbdata[j]
             }
+            graphNow.historyimg.push(
+            {
+               data : imdata,
+               type : graphNow.type
+            })
             // 画出直方图
             clearHistogram()
             let hisdata = histogramData(imdata)
@@ -815,3 +868,76 @@ function Medianvaluefiltering() {
     }
 }
 
+// 历史记录 用于 undo 和 redo
+class History{
+
+    constructor(maxl){
+        this.history = new Array();
+        this.nowimg = -1;
+        this.length = 0;
+        this.maxl = maxl
+    }
+
+    pop(){
+        // 删除最后
+        this.history.pop()
+
+        if(this.nowimg == this.length){
+            this.length -=1
+            this.nowimg -=1
+        }
+        else{
+            this.length -=1
+        }
+   
+
+    }
+
+    shift(){
+        // 删除最前
+        this.history.shift()
+        this.length -=1
+        this.nowimg -=1
+    }
+
+    push(element){
+        while(true){
+            if(this.nowimg == this.length -1){
+                break
+            }
+            else{
+                this.pop()
+            }
+        }
+        if(this.length >= this.maxl){
+            this.shift()
+        }
+        this.history.push(element)
+        this.length +=1
+        this.nowimg +=1
+        
+    }
+
+    undo(){
+        // 将 nowimg 向前移动
+        if(this.nowimg > 0 ){
+            this.nowimg -= 1
+            return this.history[this.nowimg]
+        }
+        else{
+            return null;
+        }
+    }
+    
+    redo(){
+        // 将 nowimg 向后移动
+        if(this.nowimg  < this.length -1 ){
+            this.nowimg += 1
+            return this.history[this.nowimg]
+        }
+        else{
+
+            return null
+        }
+    }
+}
