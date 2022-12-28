@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "packager": "electron-packager ./ testapp --win --out ./outputs"
+    "packager": "electron-packager ./ bmpdip --win --out ./outputs --icon=E:/_todo/dip_expe/yedip/res/icon/ln.ico"
   },
   "repository": {
     "type": "git",

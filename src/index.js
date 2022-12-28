@@ -33,7 +33,7 @@ app.on('window-all-closed', function () {
                           nodeIntegration: true ,
                           contextIsolation:false
                         },
-        // icon : path.join(__dirname,'')
+        icon : path.join(path.resolve(__dirname,'..'),'res','icon','ln.jpg')
        });
       //  Menu.setApplicationMenu(null)
     Menu.setApplicationMenu(null)
@@ -42,7 +42,7 @@ app.on('window-all-closed', function () {
     mainWindow.loadURL(path.join(path.resolve(__dirname),'main.html'))
     mainWindow.loadURL('')
     // mainWindow.loadURL('http://43.143.182.88:3002/?token=dbcad706-e788-4159-9ace-7d8a8e1b03dc')
-    mainWindow.webContents.openDevTools({ mode: 'detach' });
+    // mainWindow.webContents.openDevTools({ mode: 'detach' });
  
   
     // 打开开发工具
