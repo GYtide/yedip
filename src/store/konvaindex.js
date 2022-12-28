@@ -62,7 +62,7 @@ function drawImage(imageObj) {
 
     if(newwidth > stage.width()*0.8 || newheight > stage.height()*0.8){
         // 缩放
-        console.log(Math.floor( stage.width()*0.8/newwidth * 10 )/10 , Math.floor(stage.height()*0.8/newheight * 10)/10)
+        // console.log(Math.floor( stage.width()*0.8/newwidth * 10 )/10 , Math.floor(stage.height()*0.8/newheight * 10)/10)
         // 确定缩放比例，
         if(Math.floor( stage.width()*0.8/newwidth * 10 )/10 < Math.floor(stage.height()*0.8/newheight * 10)/10){
             zoomRatio = Math.floor(  stage.width()*0.8/newwidth * 10 )/10
@@ -74,7 +74,7 @@ function drawImage(imageObj) {
     }
 
     // 进行缩放
-    console.log(zoomRatio)
+
     if(zoomRatio <= 0.3 ){
         alert ('图片过大无法正常显示')
         return

@@ -259,6 +259,7 @@
             <div id="contextpanel" class="item">
 
                 <div class="sketchpad item ">
+                    <div id="message"></div>
                     <div id="container"></div>
                 </div>
                 <div class="histogram item" id="histogram">
@@ -380,11 +381,12 @@
             })
         ]);
         console.log('Fetched image copied.');
+        canvasmessage('已复制到剪贴板')
 
-        navigator.clipboard.readText().then(
-            clipText => {
-                console.log(clipText)
-            });;
+        // navigator.clipboard.readText().then(
+        //     clipText => {
+        //         console.log(clipText)
+        //     });;
     }
 
     // 导出绘图区
@@ -415,11 +417,12 @@
                 })
             ]);
             console.log('Fetched image copied.');
+            canvasmessage('已复制到剪贴板')
 
-            navigator.clipboard.readText().then(
-                clipText => {
-                    console.log(clipText)
-                });;
+            // navigator.clipboard.readText().then(
+            //     clipText => {
+            //         console.log(clipText)
+            // });;
         });
     }
 
@@ -453,6 +456,7 @@
 
 
     function importImage() {
+
         let input = document.createElement('input');
         input.type = 'file';
         input.onchange = _this => {
@@ -485,6 +489,13 @@
 
     }
     function importlnImage(imagename) {
+        console.log( layer.children[layer.children.length-1]?.getType())
+        // 限制图片数量在 6 以下,如果第七个
+        if(layer.children.length > 6 || (layer.children.length>5 && layer.children[layer.children.length-1]?.getType() != 'Group' )){
+            canvasmessage('图片数量太多啦')
+            return ;
+        }
+
         var imageObj = new Image();
         imageObj.onload = function () {
             drawImage(this)
@@ -564,7 +575,7 @@
 
         // 如果点击空白处 移除图形选择框
         if (e.target === stage) {
-            console.log('========================')
+            // console.log('========================')
             // console.log(aShape.length, '   ', aShape)
             // console.log()
 
@@ -616,7 +627,7 @@
             Zoomratio.disabled = false
             Zoomratio1.value = graphNow.zoomRatio
             Zoomratio.value = graphNow.zoomRatio
-            console.log(graphNow)
+            // console.log(graphNow)
             // graphNow.strokeWidth(5)
             graphNow.moveToTop()
             bmpwidth.value = Math.floor(graphNow.width())
@@ -792,6 +803,28 @@
 
     }
 
+
+    function canvasmessage(message){
+        var mesdilog = document.getElementById('message')
+
+        mesdilog.innerHTML = message
+        setTimeout(()=>{
+            mesdilog.innerHTML = ""
+        }, 3000);
+    }
+
+
+    // undo 和 redo
+
+    function undo(){
+
+
+    }
+
+    function redo(){
+        
+
+    }
 
 </script>
 
