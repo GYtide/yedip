@@ -4,7 +4,10 @@
 
 原生 js + html + css + electron 实现简单的BMP图片处理
 
+基于 konvas 实现交互操作
+
 包括
+
 0. 读取并显示 BMP 格式图片
 1. 灰度化
 2. 反色
